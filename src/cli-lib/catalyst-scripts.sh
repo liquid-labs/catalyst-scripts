@@ -19,6 +19,8 @@ BABEL_CONFIG="${REACT_SCRIPTS_REAL_PATH}/../config/${BABEL_CONFIG}"
 case "$ACTION" in
   build)
     "${BABEL}" --config-file "${BABEL_CONFIG}" src/ --out-dir dist;;
+  start)
+    "${BABEL}" --config-file "${BABEL_CONFIG}" src/ --out-dir dist --watch;;
   *)
     echo "Unknown catalyst-scripts action: '$ACTION'." >&2;;
 esac
