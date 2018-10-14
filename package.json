@@ -1,0 +1,30 @@
+{
+  "name": "@liquid-labs/catalyst-scripts",
+  "version": "0.0.1",
+  "description": "Standard configurations and scripts useful when developing projects using Catalyst.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "catalyst-scripts": "./src/cli-lib/catalyst-scripts.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Liquid-Labs/catalyst-scripts.git"
+  },
+  "author": "Zane Rockenbaugh <zane@liquid-labs.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Liquid-Labs/catalyst-scripts/issues"
+  },
+  "homepage": "https://github.com/Liquid-Labs/catalyst-scripts#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0"
+  },
+  "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.1.0"
+  }
+}
