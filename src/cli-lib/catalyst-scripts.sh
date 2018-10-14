@@ -5,7 +5,15 @@ ACTION="$2"
 cd -P `dirname $0`
 cd $(dirname $(readlink $0))
 REACT_SCRIPTS_REAL_PATH="$PWD"
+# we prefer our own babel, if installed
 BABEL=$(npm bin)/babel
+if [ ! -x "$BABEL" ]; then
+  cd $LOCAL_TARGET_PACKAGE_ROOT
+  BABEL=$(npm bin)/babel
+fi
+if [ ! -x "$BABEL" ]; then
+  echo "Could not locate babel executable; bailing out." >&2
+fi
 
 cd "$LOCAL_TARGET_PACKAGE_ROOT"
 HAS_JSX=`find src/ -name "*.jsx" | wc -l`
