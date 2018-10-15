@@ -1,0 +1,49 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "standard",
+    "standard-react",
+    "eslint:recommended"
+  ],
+  "env": {
+    "es6": true
+  },
+  "plugins": [
+    "react"
+  ],
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "rules": {
+    "brace-style": [2, "stroustrup", { "allowSingleLine": true }],
+    "curly": [2, "multi-line"],
+    "key-spacing": [2, {
+      "singleLine": {
+        "beforeColon": true,
+        "afterColon": true,
+        "mode": "strict"
+      },
+      "multiLine": {
+        "beforeColon": true,
+        "afterColon": true,
+        "align": "colon"
+      }
+    }],
+    "operator-linebreak": [2, "before", { "overrides": { "=": "after" } }],
+    "prefer-const": 2,
+    "prefer-spread": 2,
+    "react/jsx-boolean-value": [2, "never"],
+    "space-before-function-paren": [2, "never"],
+
+    "array-callback-return": 2,
+    "guard-for-in": 2,
+    "no-caller": 2,
+    "no-extra-bind": 2,
+    "no-multi-spaces": 2,
+    "no-new-wrappers": 2,
+    "no-throw-literal": 2,
+    "no-unexpected-multiline": 2,
+    "no-with": 2,
+    "yoda": 2
+  }
+}
