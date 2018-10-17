@@ -96,3 +96,9 @@ the past (though with modern transpilers, maybe we should revisit that).
 `"no-invalid-this": 2`: There is a valid case for an "invalid" this in react.
 Rather that creating a function and binding, you can use `this` in an arrow
 function to avoid the need to `bind` functions (and we do), [as discussed here](https://medium.com/@jacobworrel/babels-transform-class-properties-plugin-how-it-works-and-what-it-means-for-your-react-apps-6983539ffc22).
+
+## Reference
+
+* [Javascript standard eslint rules](https://github.com/standard/eslint-config-standard)
+* [Eslint rules list](https://eslint.org/docs/rules/)
+* [eslint-config-google](https://github.com/google/eslint-config-google)
