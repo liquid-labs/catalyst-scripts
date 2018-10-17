@@ -1,1 +1,2 @@
 PROJECT_HOME='git@github.com:Liquid-Labs/catalyst-scripts.git'
+NPM_CHECK_OPTS='-i eslint -i eslint-config-standard -i eslint-config-standard-react -i @babel/preset-env -i @babel/preset-react -i @babel/plugin-proposal-class-properties'
