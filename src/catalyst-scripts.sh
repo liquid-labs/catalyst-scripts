@@ -24,17 +24,11 @@ function find-exec() {
 cd "$LOCAL_TARGET_PACKAGE_ROOT"
 if [[ "$ACTION" == 'build' ]] || [[ "$ACTION" == 'start' ]]; then
   # we prefer our own babel, if installed
-  BABEL=`find-exec babel`
+  ROLLUP=`find-exec rollup`
 
-  HAS_JSX=`find src/ -name "*.jsx" | wc -l`
-  if (( $HAS_JSX > 0 )); then
-    BABEL_CONFIG=babel-react.config.js
-  else
-    BABEL_CONFIG=babel-base.config.js
-  fi
-  BABEL_CONFIG="${REACT_SCRIPTS_REAL_PATH}/../config/${BABEL_CONFIG}"
+  ROLLUP_CONFIG="${REACT_SCRIPTS_REAL_PATH}/../config/rollup.config.js"
 
-  COMMAND="${BABEL} --config-file ${BABEL_CONFIG} src/ --out-dir dist"
+  COMMAND="${ROLLUP} --config ${ROLLUP_CONFIG}"
   if [[ "$ACTION" == 'start' ]]; then
     COMMAND="$COMMAND --watch"
   fi
