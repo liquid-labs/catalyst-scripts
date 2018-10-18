@@ -29,7 +29,10 @@ export default {
     url(),
     babel({
       exclude: 'node_modules/**',
-      presets: [ '@babel/preset-env', '@babel/preset-react' ],
+      // '"modules": false' necessary for our React apps to work with the
+      // distributed library.
+      // TODO: does rollup handle the modules in this case?
+      presets: [ ['@babel/preset-env', { "modules": false } ], '@babel/preset-react' ],
       plugins: [ "@babel/plugin-proposal-class-properties" ]
     }),
     resolve({ extensions: [ '.js', '.jsx' ]}),
