@@ -35,7 +35,7 @@ if [[ "$ACTION" == 'build' ]] || [[ "$ACTION" == 'start' ]]; then
 elif [[ "$ACTION" == 'lint' ]] || [[ "$ACTION" == 'lint-fix' ]]; then
   ESLINT_CONFIG="${REACT_SCRIPTS_REAL_PATH}/../config/eslintrc.json"
   ESLINT=`find-exec eslint`
-  COMMAND="$COMMAND; $ESLINT --ext .js,.jsx --config $ESLINT_CONFIG src/**"
+  COMMAND="$ESLINT --ext .js,.jsx --config $ESLINT_CONFIG src/**"
   if [[ "$ACTION" == 'lint-fix' ]]; then
     COMMAND="$COMMAND --fix"
   fi
