@@ -17,6 +17,10 @@
   "rules": {
     "brace-style": [2, "stroustrup", { "allowSingleLine": true }],
     "curly": [2, "multi-line"],
+    "indent": [2, 2, {
+      "FunctionDeclaration": { "body": 1, "parameters": 2 },
+      "ignoredNodes": ["JSXElement", "JSXElement > *", "JSXAttribute", "JSXIdentifier", "JSXNamespacedName", "JSXMemberExpression", "JSXSpreadAttribute", "JSXExpressionContainer", "JSXOpeningElement", "JSXClosingElement", "JSXText", "JSXEmptyExpression", "JSXSpreadChild"]
+    }],
     "key-spacing": [2, {
       "singleLine": {
         "beforeColon": true,
@@ -33,6 +37,7 @@
     "prefer-const": 2,
     "prefer-spread": 2,
     "react/jsx-boolean-value": [2, "never"],
+    "react/jsx-indent-props": [2, 4],
     "space-before-function-paren": [2, "never"],
 
     "array-callback-return": 2,

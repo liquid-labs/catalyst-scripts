@@ -10,7 +10,40 @@ Liquid Labs Style extends standard style with:
 * use `const` when variables are not changed (`"prefer-const": 2`),
 * use the spread operator instead of `Object.apply()`; (`"prefer-spread": 2`),
 * use bare boolean parameters embedded JSX (`"react/jsx-boolean-value": [2, "never"]`),
-* no spaces before function parens (`"space-before-function-paren": [2, "never"]`),
+* no spaces before function parens (`"space-before-function-paren": [2, "never"]`)
+
+### Indentation
+
+We use a basic indentation of 2 spaces with and a hanging indent declaration
+parameters and JSX props.
+E.g.:
+```javascript
+function foo(bar
+    baz) {
+  bodyFunc();
+}
+```
+```HTML
+<Foo bar={baz}
+    bing="I'm hanging">
+  And I'm the Body.
+</Foo>
+```
+The `ignoredNodes` lets JSX rules take care of the JSX indentation. The '2' in
+`parameters` and `jsx-indent-props` are how many units of the indention to use
+in that context, the 2 therefore establishes the extra, hanging indention,
+whereas 1 would align.
+
+Rules:
+* `"indent": [2, 2, {
+    "FunctionDeclaration": { "body": 1, "parameters": 2 },
+    "ignoredNodes": ["JSXElement", "JSXElement > *", "JSXAttribute", "JSXIdentifier",
+      "JSXNamespacedName", "JSXMemberExpression", "JSXSpreadAttribute", "JSXExpressionContainer",
+      "JSXOpeningElement", "JSXClosingElement", "JSXText", "JSXEmptyExpression", "JSXSpreadChild"]
+  }]`
+* `"react/jsx-indent-props": [2, 2]`
+
+For reference: [eslint indent rule](https://eslint.org/docs/rules/indent), [eslint config showing ignored JSX nodes](https://github.com/airbnb/javascript/blob/e9fff7adbf6dd4e3723c12849c407aafd429cf0f/packages/eslint-config-airbnb-base/rules/style.js#L141), [JSX AST](https://github.com/facebook/jsx/blob/master/AST.md)
 
 ### Brace style
 
