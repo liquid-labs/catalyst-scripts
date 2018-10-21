@@ -9,15 +9,19 @@ REACT_SCRIPTS_REAL_PATH="$PWD"
 function find-exec() {
   EXEC_NAME="$1"
 
+  pushd "$REACT_SCRIPTS_REAL_PATH" > /dev/null
+  # Search for the exec locall, then globally.
   EXEC=$(npm bin)/$EXEC_NAME
-  if [ ! -x "$EXEC" ]; then
-    cd $LOCAL_TARGET_PACKAGE_ROOT
-    EXEC=$(npm bin)/$EXEC_NAME
+  if [[ ! -x "$EXEC" ]]; then
+    if which -s catalyst-scripts; then
+      EXEC='catalyst-scripts'
+    else
+      echo "Could not locate '$EXEC_NAME' executable; bailing out." >&2
+      popd > /dev/null
+      exit 10
+    fi
   fi
-  if [ ! -x "$EXEC" ]; then
-    echo "Could not locate '$EXEC_NAME' executable; bailing out." >&2
-    exit 10
-  fi
+  popd > /dev/null
   echo $EXEC
 }
 
