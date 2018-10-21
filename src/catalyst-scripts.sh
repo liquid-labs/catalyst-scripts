@@ -26,26 +26,27 @@ function find-exec() {
 }
 
 cd "$LOCAL_TARGET_PACKAGE_ROOT"
-if [[ "$ACTION" == 'build' ]] || [[ "$ACTION" == 'start' ]]; then
-  # we prefer our own babel, if installed
+case "$ACTION" in
+install)
+  echo "TODO"
+  ;;
+build || start)
   ROLLUP=`find-exec rollup`
-
   ROLLUP_CONFIG="${REACT_SCRIPTS_REAL_PATH}/../config/rollup.config.js"
-
   COMMAND="${ROLLUP} --config ${ROLLUP_CONFIG}"
   if [[ "$ACTION" == 'start' ]]; then
     COMMAND="$COMMAND --watch"
-  fi
-elif [[ "$ACTION" == 'lint' ]] || [[ "$ACTION" == 'lint-fix' ]]; then
+  fi;;
+lint || lint-fix)
   ESLINT_CONFIG="${REACT_SCRIPTS_REAL_PATH}/../config/eslintrc.json"
   ESLINT=`find-exec eslint`
   COMMAND="$ESLINT --ext .js,.jsx --config $ESLINT_CONFIG src/**"
   if [[ "$ACTION" == 'lint-fix' ]]; then
     COMMAND="$COMMAND --fix"
-  fi
-else
+  fi;;
+*)
   echo "Unknown catalyst-scripts action: '$ACTION'." >&2
-  exit 1
-fi
+  exit 1;;
+esac
 
 $COMMAND
