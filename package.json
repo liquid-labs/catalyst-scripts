@@ -1,6 +1,6 @@
 {
   "name": "@liquid-labs/catalyst-scripts",
-  "version": "0.0.7",
+  "version": "1.0.0-alpha.0",
   "description": "Standard configurations and scripts useful when developing projects using Catalyst.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
