@@ -4,44 +4,53 @@ ACTION="$2"
 
 cd -P `dirname $0`
 cd $(dirname $(readlink $0))
-REACT_SCRIPTS_REAL_PATH="$PWD"
+CATALYST_SCRIPTS_REAL_PATH="$PWD"
 
-function find-exec() {
-  EXEC_NAME="$1"
+source "$CATALYST_SCRIPTS_REAL_PATH/../lib/files/find-exec.func.sh"
 
-  EXEC=$(npm bin)/$EXEC_NAME
-  if [ ! -x "$EXEC" ]; then
-    cd $LOCAL_TARGET_PACKAGE_ROOT
-    EXEC=$(npm bin)/$EXEC_NAME
+_ADD_SCRIPT_WARNING=false
+function add_script() {
+  KEY="${1:-}"
+  VALUE="${2:-}"
+  if [[ -z "$KEY" ]] || [[ -z "$VALUE" ]] || [[ -z "$ADDSCRIPT" ]]; then
+    echo "INTERNAL ERROR: add script called without requried args." >&2
+    exit 255
   fi
-  if [ ! -x "$EXEC" ]; then
-    echo "Could not locate '$EXEC_NAME' executable; bailing out." >&2
-    exit 10
-  fi
-  echo $EXEC
+
+  $ADDSCRIPT -k "$KEY" -v "$VALUE" >/dev/null 2>/dev/null || (_ADD_SCRIPT_WARNING=true && $ADDSCRIPT -f -k "$KEY" -v "$VALUE" >/dev/null)
 }
 
 cd "$LOCAL_TARGET_PACKAGE_ROOT"
-if [[ "$ACTION" == 'build' ]] || [[ "$ACTION" == 'start' ]]; then
-  # we prefer our own babel, if installed
-  ROLLUP=`find-exec rollup`
-
-  ROLLUP_CONFIG="${REACT_SCRIPTS_REAL_PATH}/../config/rollup.config.js"
-
-  COMMAND="${ROLLUP} --config ${ROLLUP_CONFIG}"
-  if [[ "$ACTION" == 'start' ]]; then
-    COMMAND="$COMMAND --watch"
-  fi
-elif [[ "$ACTION" == 'lint' ]] || [[ "$ACTION" == 'lint-fix' ]]; then
-  ESLINT_CONFIG="${REACT_SCRIPTS_REAL_PATH}/../config/eslintrc.json"
-  ESLINT=`find-exec eslint`
-  COMMAND="$ESLINT --ext .js,.jsx --config $ESLINT_CONFIG src/**"
-  if [[ "$ACTION" == 'lint-fix' ]]; then
-    COMMAND="$COMMAND --fix"
-  fi
-else
-  echo "Unknown catalyst-scripts action: '$ACTION'." >&2
-  exit 1
-fi
+case "$ACTION" in
+  setup)
+    ADDSCRIPT=`require-exec npmAddScript "$LOCAL_TARGET_PACKAGE_ROOT"`
+    add_script build 'catalyst-scripts "$PWD" build'
+    add_script start 'catalyst-scripts "$PWD" start'
+    add_script lint 'catalyst-scripts "$PWD" lint'
+    add_script lint-fix 'catalyst-scripts "$PWD" lint-fix'
+    add_script install-clean 'rm -rf package-lock.json node_modules/ && npm install'
+    add_script prepare 'rm -rf dist && npm run lint && npm run build'
+    if [[ "$_ADD_SCRIPT_WARNING" -eq "true" ]]; then
+      echo "Possibly verwrote some existing scripts. Check your package.json diff and update as necessary."
+    fi
+    ;;
+  build | start)
+    ROLLUP=`require-exec rollup "$LOCAL_TARGET_PACKAGE_ROOT"`
+    ROLLUP_CONFIG="${CATALYST_SCRIPTS_REAL_PATH}/../config/rollup.config.js"
+    COMMAND="${ROLLUP} --config ${ROLLUP_CONFIG}"
+    if [[ "$ACTION" == 'start' ]]; then
+      COMMAND="$COMMAND --watch"
+    fi;;
+  lint | lint-fix)
+    ESLINT_CONFIG="${CATALYST_SCRIPTS_REAL_PATH}/../config/eslintrc.json"
+    ESLINT=`require-exec eslint "$LOCAL_TARGET_PACKAGE_ROOT"`
+    COMMAND="$ESLINT --ext .js,.jsx --config $ESLINT_CONFIG src/**"
+    if [[ "$ACTION" == 'lint-fix' ]]; then
+      COMMAND="$COMMAND --fix"
+    fi;;
+  *)
+    echo "Unknown catalyst-scripts action: '$ACTION'." >&2
+    exit 1;;
+esac
 
 $COMMAND
