@@ -1,6 +1,6 @@
 {
   "name": "@liquid-labs/catalyst-scripts",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "Standard configurations and scripts useful when developing projects using Catalyst.",
   "scripts": {
     "prepare": "rsync -r node_modules/@liquid-labs/bash-toolkit/src/ lib/",
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/Liquid-Labs/catalyst-scripts#readme",
   "dependencies": {
+    "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
@@ -38,6 +39,7 @@
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-react": "^7.11.1",
     "eslint-plugin-standard": "^4.0.0",
+    "jest": "^23.6.0",
     "npm-add-script": "^1.1.0",
     "rollup": "^0.66.6",
     "rollup-plugin-babel": "^4.0.3",
