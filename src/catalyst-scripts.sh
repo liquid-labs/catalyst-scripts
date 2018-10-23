@@ -22,7 +22,7 @@ function add_script() {
 
 cd "$LOCAL_TARGET_PACKAGE_ROOT"
 case "$ACTION" in
-  setup)
+  setup-scripts)
     ADDSCRIPT=`require-exec npmAddScript "$LOCAL_TARGET_PACKAGE_ROOT"`
     add_script build 'catalyst-scripts "$PWD" build'
     add_script start 'catalyst-scripts "$PWD" start'
