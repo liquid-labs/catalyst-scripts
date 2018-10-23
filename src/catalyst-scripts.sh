@@ -30,6 +30,8 @@ case "$ACTION" in
     add_script lint-fix 'catalyst-scripts "$PWD" lint-fix'
     add_script install-clean 'rm -rf package-lock.json node_modules/ && npm install'
     add_script prepare 'rm -rf dist && npm run lint && npm run build'
+    add_script pretest 'catalyst-scripts "$PWD" pretest'
+    add_script test 'npm run pretest && catalyst-scripts "$PWD" test'
     if [[ "$_ADD_SCRIPT_WARNING" -eq "true" ]]; then
       echo "Possibly verwrote some existing scripts. Check your package.json diff and update as necessary."
     fi
