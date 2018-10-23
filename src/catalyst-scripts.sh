@@ -31,7 +31,7 @@ case "$ACTION" in
     add_script install-clean 'rm -rf package-lock.json node_modules/ && npm install'
     add_script prepare 'rm -rf dist && npm run lint && npm run build'
     if [[ "$_ADD_SCRIPT_WARNING" -eq "true" ]]; then
-      echo "Overwrote some existing scripts. Check your package.json diff and update as necessary."
+      echo "Possibly verwrote some existing scripts. Check your package.json diff and update as necessary."
     fi
     ;;
   build | start)
