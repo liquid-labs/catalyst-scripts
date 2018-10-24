@@ -6,7 +6,7 @@ cd -P `dirname $0`
 cd $(dirname $(readlink $0))
 CATALYST_SCRIPTS_REAL_PATH="$PWD"
 
-source "$CATALYST_SCRIPTS_REAL_PATH/../lib/files/find-exec.func.sh"
+import find-exec
 
 _ADD_SCRIPT_WARNING=false
 function add_script() {

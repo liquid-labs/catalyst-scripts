@@ -1,6 +1,6 @@
 {
   "name": "@liquid-labs/catalyst-scripts",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "Standard configurations and scripts useful when developing projects using Catalyst.",
   "scripts": {
     "prepare": "rsync -r --delete --exclude='*.test.*' --exclude='*.seqtest.*' node_modules/@liquid-labs/bash-toolkit/src/ lib/",
@@ -50,6 +50,6 @@
     "rollup-plugin-url": "^2.0.1"
   },
   "devDependencies": {
-    "@liquid-labs/bash-toolkit": "0.0.3"
+    "@liquid-labs/bash-toolkit": "^1.0.0-alpha.1"
   }
 }
