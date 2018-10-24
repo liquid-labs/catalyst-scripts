@@ -50,6 +50,6 @@
     "rollup-plugin-url": "^2.0.1"
   },
   "devDependencies": {
-    "@liquid-labs/bash-toolkit": "file:liquid-labs-bash-toolkit-1.0.0-alpha.1.tgz"
+    "@liquid-labs/bash-toolkit": "^1.0.0-alpha.1"
   }
 }
