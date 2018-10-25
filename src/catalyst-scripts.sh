@@ -39,8 +39,8 @@ case "$ACTION" in
   pretest)
     BABEL=`require-exec babel "$LOCAL_TARGET_PACKAGE_ROOT"`
     BABEL_CONFIG="${CONFIG_PATH}/babel.config.js"
-    #COMMAND="rm -rf test-staging; '${BABEL}' --config-file '${BABEL_CONFIG}' --source-maps src -d test-staging"
-    COMMAND="rm -rf test-staging; ${BABEL} --config-file ${BABEL_CONFIG} $LOCAL_TARGET_PACKAGE_ROOT/src --out-dir test-staging --source-maps"
+    # Jest is not picking up the external maps, so we inline them for the test.
+    COMMAND="rm -rf test-staging; ${BABEL} --config-file ${BABEL_CONFIG} $LOCAL_TARGET_PACKAGE_ROOT/src --out-dir test-staging --source-maps=inline"
   ;;
   test)
     JEST=`require-exec jest "$LOCAL_TARGET_PACKAGE_ROOT"`
