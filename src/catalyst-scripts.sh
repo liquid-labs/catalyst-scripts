@@ -6,6 +6,7 @@ import real_path
 import find_exec
 
 CATALYST_SCRIPTS_REAL_PATH="$(dirname "$(real_path "${BASH_SOURCE[0]}")")"
+CONFIG_PATH="${CATALYST_SCRIPTS_REAL_PATH}/../config"
 
 _ADD_SCRIPT_WARNING=false
 function add_script() {
@@ -37,24 +38,26 @@ case "$ACTION" in
   ;;
   pretest)
     BABEL=`require-exec babel "$LOCAL_TARGET_PACKAGE_ROOT"`
-    BABEL_CONFIG="${CATALYST_SCRIPTS_REAL_PATH}/../config/babel.config.js"
+    BABEL_CONFIG="${CONFIG_PATH}/babel.config.js"
     #COMMAND="rm -rf test-staging; '${BABEL}' --config-file '${BABEL_CONFIG}' --source-maps src -d test-staging"
     COMMAND="rm -rf test-staging; ${BABEL} --config-file ${BABEL_CONFIG} $LOCAL_TARGET_PACKAGE_ROOT/src --out-dir test-staging --source-maps"
   ;;
   test)
     JEST=`require-exec jest "$LOCAL_TARGET_PACKAGE_ROOT"`
-    COMMAND="'${JEST}' -i ./test-staging"
+    JEST_CONFIG="${CONFIG_PATH}/jest.config.js"
+    # the '--runInBand' is necessary for the 'seqtests' to work.
+    COMMAND="${JEST} --config=${JEST_CONFIG} --runInBand ./test-staging"
   ;;
   build | start)
     ROLLUP=`require-exec rollup "$LOCAL_TARGET_PACKAGE_ROOT"`
-    ROLLUP_CONFIG="${CATALYST_SCRIPTS_REAL_PATH}/../config/rollup.config.js"
+    ROLLUP_CONFIG="${CONFIG_PATH}/rollup.config.js"
     COMMAND="${ROLLUP} --config ${ROLLUP_CONFIG}"
     if [[ "$ACTION" == 'start' ]]; then
       COMMAND="$COMMAND --watch"
     fi
   ;;
   lint | lint-fix)
-    ESLINT_CONFIG="${CATALYST_SCRIPTS_REAL_PATH}/../config/eslintrc.json"
+    ESLINT_CONFIG="${CONFIG_PATH}/eslintrc.json"
     ESLINT=`require-exec eslint "$LOCAL_TARGET_PACKAGE_ROOT"`
     COMMAND="$ESLINT --ext .js,.jsx --config $ESLINT_CONFIG src/**"
     if [[ "$ACTION" == 'lint-fix' ]]; then
