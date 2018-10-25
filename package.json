@@ -1,6 +1,6 @@
 {
   "name": "@liquid-labs/catalyst-scripts",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "description": "Standard configurations and scripts useful when developing projects using Catalyst.",
   "scripts": {
     "prepare": "$(npm bin)/bash-toolkit-import",
@@ -8,11 +8,10 @@
   },
   "files": [
     "config/",
-    "src/",
-    "lib/"
+    "dist/"
   ],
   "bin": {
-    "catalyst-scripts": "./src/catalyst-scripts.sh"
+    "catalyst-scripts": "./dist/catalyst-scripts.sh"
   },
   "repository": {
     "type": "git",
@@ -50,6 +49,6 @@
     "rollup-plugin-url": "^2.0.1"
   },
   "devDependencies": {
-    "@liquid-labs/bash-toolkit": "^1.0.0-alpha.2"
+    "@liquid-labs/bash-toolkit": "^1.0.0-alpha.5"
   }
 }
