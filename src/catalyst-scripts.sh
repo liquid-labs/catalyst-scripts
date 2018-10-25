@@ -2,11 +2,10 @@
 LOCAL_TARGET_PACKAGE_ROOT="$1"
 ACTION="$2"
 
-cd -P `dirname $0`
-cd $(dirname $(readlink $0))
-CATALYST_SCRIPTS_REAL_PATH="$PWD"
+import real_path
+import find_exec
 
-import find-exec
+CATALYST_SCRIPTS_REAL_PATH="$(dirname "$(real_path "${BASH_SOURCE[0]}")")"
 
 _ADD_SCRIPT_WARNING=false
 function add_script() {
