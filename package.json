@@ -1,6 +1,6 @@
 {
   "name": "@liquid-labs/catalyst-scripts",
-  "version": "1.0.0-alpha.7",
+  "version": "1.0.0-alpha.6",
   "description": "Standard configurations and scripts useful when developing projects using Catalyst.",
   "scripts": {
     "prepare": "$(npm bin)/bash-toolkit-import",
@@ -23,13 +23,12 @@
     "url": "https://github.com/Liquid-Labs/catalyst-scripts/issues"
   },
   "homepage": "https://github.com/Liquid-Labs/catalyst-scripts#readme",
-  "devDependencies": {
+  "dependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
-    "@liquid-labs/bash-toolkit": "^1.0.0-alpha.5",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.7.0",
     "eslint-config-standard": "^12.0.0",
@@ -48,5 +47,8 @@
     "rollup-plugin-peer-deps-external": "^2.2.0",
     "rollup-plugin-postcss": "^1.6.2",
     "rollup-plugin-url": "^2.0.1"
+  },
+  "devDependencies": {
+    "@liquid-labs/bash-toolkit": "^1.0.0-alpha.5"
   }
 }
