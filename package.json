@@ -50,5 +50,11 @@
   },
   "devDependencies": {
     "@liquid-labs/bash-toolkit": "^1.0.0-alpha.5"
+  },
+  "catalyst": {
+    "version-check": {
+      "ignore": [],
+      "options": "--skip-unused"
+    }
   }
 }
