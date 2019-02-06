@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
-LOCAL_TARGET_PACKAGE_ROOT="$1"
-ACTION="$2"
+
+# bash strict settings
+set -o errexit # exit on errors
+set -o nounset # exit on use of uninitialized variable
+set -o pipefail
+
+ACTION="$1"; shift
 
 import real_path
 import find_exec
@@ -20,33 +25,64 @@ function add_script() {
   $ADDSCRIPT -k "$KEY" -v "$VALUE" >/dev/null 2>/dev/null || (_ADD_SCRIPT_WARNING=true && $ADDSCRIPT -f -k "$KEY" -v "$VALUE" >/dev/null)
 }
 
-cd "$LOCAL_TARGET_PACKAGE_ROOT"
+function test_all() {
+  test -z "$TEST_TYPES" || ( test_unit && test_integartion )
+}
+
+function test_unit() {
+  [[ -z "$TEST_TYPES" ]] || echo "$TEST_TYPES" | grep -qE '(^|, *| +)unit?(, *| +|$)'
+}
+
+function test_integration() {
+  [[ -z "$TEST_TYPES" ]] || echo "$TEST_TYPES" | grep -qE '(^|, *| +)int(egration)?(, *| +|$)'
+}
+
 case "$ACTION" in
   setup-scripts)
     ADDSCRIPT=`require-exec npmAddScript "$LOCAL_TARGET_PACKAGE_ROOT"`
-    add_script build 'catalyst-scripts "$PWD" build'
-    add_script start 'catalyst-scripts "$PWD" start'
-    add_script lint 'catalyst-scripts "$PWD" lint'
-    add_script lint-fix 'catalyst-scripts "$PWD" lint-fix'
+    add_script build 'catalyst-scripts build'
+    add_script start 'catalyst-scripts start'
+    add_script lint 'catalyst-scripts lint'
+    add_script lint-fix 'catalyst-scripts lint-fix'
     add_script install-clean 'rm -rf package-lock.json node_modules/ && npm install'
     add_script prepare 'rm -rf dist && npm run lint && npm run build'
-    add_script pretest 'catalyst-scripts "$PWD" pretest'
-    add_script test 'npm run pretest && catalyst-scripts "$PWD" test'
+    add_script pretest 'catalyst-scripts pretest'
+    add_script test 'catalyst-scripts test'
     if [[ "$_ADD_SCRIPT_WARNING" -eq "true" ]]; then
       echo "Possibly verwrote some existing scripts. Check your package.json diff and update as necessary."
     fi
   ;;
   pretest)
-    BABEL=`require-exec babel "$LOCAL_TARGET_PACKAGE_ROOT"`
-    BABEL_CONFIG="${CONFIG_PATH}/babel.config.js"
-    # Jest is not picking up the external maps, so we inline them for the test.
-    COMMAND="rm -rf test-staging; ${BABEL} --config-file ${BABEL_CONFIG} $LOCAL_TARGET_PACKAGE_ROOT/src --out-dir test-staging --source-maps=inline"
+    if [[ -d 'go' ]]; then
+      if test_integration && [[ -n "$(find go -name "sql.go" -print -quit)" ]]; then
+        COMMAND='catalyst data rebuild sql;'
+      else
+        COMMAND=""
+      fi
+    fi
+    if [[ -d 'js' ]]; then
+      BABEL=`require-exec babel "$LOCAL_TARGET_PACKAGE_ROOT"`
+      BABEL_CONFIG="${CONFIG_PATH}/babel.config.js"
+      # Jest is not picking up the external maps, so we inline them for the test.
+      COMMAND="${COMMAND}rm -rf test-staging; ${BABEL} --config-file ${BABEL_CONFIG} $LOCAL_TARGET_PACKAGE_ROOT/src --out-dir test-staging --source-maps=inline"
+    fi
   ;;
   test)
-    JEST=`require-exec jest "$LOCAL_TARGET_PACKAGE_ROOT"`
-    JEST_CONFIG="${CONFIG_PATH}/jest.config.js"
-    # the '--runInBand' is necessary for the 'seqtests' to work.
-    COMMAND="${JEST} --config=${JEST_CONFIG} --runInBand ./test-staging"
+    if [[ -d 'go' ]]; then
+      if test_all; then
+        COMMAND='cd go && env $(catalyst environments show | tail -n +2 | xargs) go test -v ./...;'
+      elif test_unit; then
+        COMMAND='cd go && env $(catalyst environments show | tail -n +2 | xargs) SKIP_INTEGRATION=true go test -v ./...;'
+      elif test_integration; then
+        COMMAND='cd go && env $(catalyst environments show | tail -n +2 | xargs) go test -v ./... -run Integration;'
+      fi
+    fi
+    if [[ -d 'js' ]]; then
+      JEST=`require-exec jest "$LOCAL_TARGET_PACKAGE_ROOT"`
+      JEST_CONFIG="${CONFIG_PATH}/jest.config.js"
+      # the '--runInBand' is necessary for the 'seqtests' to work.
+      COMMAND="${COMMAND}${JEST} --config=${JEST_CONFIG} --runInBand ./test-staging"
+    fi
   ;;
   build | start)
     ROLLUP=`require-exec rollup "$LOCAL_TARGET_PACKAGE_ROOT"`
