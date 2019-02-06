@@ -26,15 +26,15 @@ function add_script() {
 }
 
 function test_all() {
-  test -z "$TEST_TYPES" || ( test_unit && test_integartion )
+  test -z "${TEST_TYPES:-}" || ( test_unit && test_integration )
 }
 
 function test_unit() {
-  [[ -z "$TEST_TYPES" ]] || echo "$TEST_TYPES" | grep -qE '(^|, *| +)unit?(, *| +|$)'
+  [[ -z "${TEST_TYPES:-}" ]] || echo "$TEST_TYPES" | grep -qE '(^|, *| +)unit?(, *| +|$)'
 }
 
 function test_integration() {
-  [[ -z "$TEST_TYPES" ]] || echo "$TEST_TYPES" | grep -qE '(^|, *| +)int(egration)?(, *| +|$)'
+  [[ -z "${TEST_TYPES:-}" ]] || echo "$TEST_TYPES" | grep -qE '(^|, *| +)int(egration)?(, *| +|$)'
 }
 
 case "$ACTION" in
@@ -55,7 +55,7 @@ case "$ACTION" in
   pretest)
     if [[ -d 'go' ]]; then
       if test_integration && [[ -n "$(find go -name "sql.go" -print -quit)" ]]; then
-        COMMAND='catalyst data rebuild sql;'
+        COMMAND='catalyst data rebuild sql || ( EXIT=$?; echo -e "If you want to run only unit tests, you can invoke the NPM command like\nTEST_TYPES=unit npm run test"; exit $EXIT )'
       else
         COMMAND=""
       fi
