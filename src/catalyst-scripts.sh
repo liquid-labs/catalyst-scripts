@@ -58,7 +58,9 @@ case "$ACTION" in
   ;;
   pretest)
     if [[ -d 'go' ]]; then
-      if data_reset && test_integration && [[ -n "$(find go -name "sql.go" -print -quit)" ]]; then
+      if ! data_reset; then
+        COMMAND='echo "Skippeng DB reset.";'
+      elif test_integration && [[ -n "$(find go -name "sql.go" -print -quit)" ]]; then
         # Because go generally builds faster than DBs reset, we check the build
         # first to avoid possible costly and pointless DB reset.
         COMMAND='echo "Complie check..."; cd go && go build ./...;'
