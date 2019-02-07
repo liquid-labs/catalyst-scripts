@@ -37,6 +37,10 @@ function test_integration() {
   [[ -z "${TEST_TYPES:-}" ]] || echo "$TEST_TYPES" | grep -qE '(^|, *| +)int(egration)?(, *| +|$)'
 }
 
+function data_reset() {
+  test -z "${NO_DATA_RESET:-}"
+}
+
 case "$ACTION" in
   setup-scripts)
     ADDSCRIPT=`require-exec npmAddScript "$LOCAL_TARGET_PACKAGE_ROOT"`
@@ -54,8 +58,13 @@ case "$ACTION" in
   ;;
   pretest)
     if [[ -d 'go' ]]; then
-      if test_integration && [[ -n "$(find go -name "sql.go" -print -quit)" ]]; then
-        COMMAND='catalyst data rebuild sql || ( EXIT=$?; echo -e "If you want to run only unit tests, you can invoke the NPM command like\nTEST_TYPES=unit npm run test"; exit $EXIT );'
+      if data_reset && test_integration && [[ -n "$(find go -name "sql.go" -print -quit)" ]]; then
+        # Because go generally builds faster than DBs reset, we check the build
+        # first to avoid possible costly and pointless DB reset.
+        COMMAND='echo "Complie check..."; cd go && go build ./...;'
+        # Rebuild the schema
+        COMMAND="${COMMAND}"'echo "Ressetting database..."; catalyst data rebuild sql || ( EXIT=$?; echo -e "If you want to run only unit tests, you can invoke the NPM command like\nTEST_TYPES=unit npm run test"; exit $EXIT );'
+        # Load test data (if any)
         if [[ -d "./data/sql/test" ]]; then
           COMMAND="${COMMAND}catalyst data load test;"
         else
@@ -74,12 +83,14 @@ case "$ACTION" in
   ;;
   test)
     if [[ -d 'go' ]]; then
+      if [[ -n "${GO_RUN:-}" ]]; then GO_RUN="-run '${GO_RUN}'"; fi
       if test_all; then
-        COMMAND='cd go && env $(catalyst environments show | tail -n +2 | xargs) go test -v ./...;'
+        COMMAND='cd go && env $(catalyst environments show | tail -n +2 | xargs) go test -v ./... '${GO_RUN:-}';'
       elif test_unit; then
-        COMMAND='cd go && env $(catalyst environments show | tail -n +2 | xargs) SKIP_INTEGRATION=true go test -v ./...;'
+        COMMAND='cd go && env $(catalyst environments show | tail -n +2 | xargs) SKIP_INTEGRATION=true go test -v ./... '${GO_RUN:-}';'
       elif test_integration; then
-        COMMAND='cd go && env $(catalyst environments show | tail -n +2 | xargs) go test -v ./... -run Integration;'
+        if [[ -z "${GO_RUN}" ]]; then GO_RUN="-run Integration"; fi
+        COMMAND='cd go && env $(catalyst environments show | tail -n +2 | xargs) go test -v ./... '${GO_RUN}';'
       fi
     fi
     if [[ -d 'js' ]]; then
