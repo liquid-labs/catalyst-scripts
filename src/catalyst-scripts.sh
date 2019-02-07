@@ -55,7 +55,12 @@ case "$ACTION" in
   pretest)
     if [[ -d 'go' ]]; then
       if test_integration && [[ -n "$(find go -name "sql.go" -print -quit)" ]]; then
-        COMMAND='catalyst data rebuild sql || ( EXIT=$?; echo -e "If you want to run only unit tests, you can invoke the NPM command like\nTEST_TYPES=unit npm run test"; exit $EXIT )'
+        COMMAND='catalyst data rebuild sql || ( EXIT=$?; echo -e "If you want to run only unit tests, you can invoke the NPM command like\nTEST_TYPES=unit npm run test"; exit $EXIT );'
+        if [[ -d "./data/sql/test" ]]; then
+          COMMAND="${COMMAND}catalyst data load test;"
+        else
+          echo "No test data files found."
+        fi
       else
         COMMAND=""
       fi
