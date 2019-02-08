@@ -7,11 +7,10 @@ set -o pipefail
 
 ACTION="$1"; shift
 
-import real_path
 import find_exec
+source ./lib/test.sh
 
-CATALYST_SCRIPTS_REAL_PATH="$(dirname "$(real_path "${BASH_SOURCE[0]}")")"
-CONFIG_PATH="${CATALYST_SCRIPTS_REAL_PATH}/../config"
+CONFIG_PATH="$(npm explore @liquid-labs/catalyst-scripts -- pwd)/config"
 
 _ADD_SCRIPT_WARNING=false
 function add_script() {
@@ -41,6 +40,7 @@ function data_reset() {
   test -z "${NO_DATA_RESET:-}"
 }
 
+COMMAND=''
 case "$ACTION" in
   setup-scripts)
     ADDSCRIPT=`require-exec npmAddScript "$LOCAL_TARGET_PACKAGE_ROOT"`
@@ -59,11 +59,11 @@ case "$ACTION" in
   pretest)
     if [[ -d 'go' ]]; then
       if ! data_reset; then
-        COMMAND='echo "Skippeng DB reset.";'
+        COMMAND="${COMMAND}echo 'Skippeng DB reset.';"
       elif test_integration && [[ -n "$(find go -name "sql.go" -print -quit)" ]]; then
         # Because go generally builds faster than DBs reset, we check the build
         # first to avoid possible costly and pointless DB reset.
-        COMMAND='echo "Complie check..."; cd go && go build ./...;'
+        COMMAND="${COMMAND}echo 'Complie check...'; cd go && go build ./...;"
         # Rebuild the schema
         COMMAND="${COMMAND}"'echo "Ressetting database..."; catalyst data rebuild sql || ( EXIT=$?; echo -e "If you want to run only unit tests, you can invoke the NPM command like\nTEST_TYPES=unit npm run test"; exit $EXIT );'
         # Load test data (if any)
@@ -72,51 +72,35 @@ case "$ACTION" in
         else
           echo "No test data files found."
         fi
-      else
-        COMMAND=""
       fi
     fi
     if [[ -d 'js' ]]; then
-      BABEL=`require-exec babel "$LOCAL_TARGET_PACKAGE_ROOT"`
+      BABEL=`require-exec babel`
       BABEL_CONFIG="${CONFIG_PATH}/babel.config.js"
       # Jest is not picking up the external maps, so we inline them for the test.
-      COMMAND="${COMMAND}rm -rf test-staging; ${BABEL} --config-file ${BABEL_CONFIG} $LOCAL_TARGET_PACKAGE_ROOT/src --out-dir test-staging --source-maps=inline"
+      COMMAND="${COMMAND}rm -rf test-staging; ${BABEL} --config-file ${BABEL_CONFIG} ./js --out-dir test-staging --source-maps=inline"
     fi
   ;;
   test)
-    if [[ -d 'go' ]]; then
-      if [[ -n "${GO_RUN:-}" ]]; then GO_RUN="-run '${GO_RUN}'"; fi
-      if test_all; then
-        COMMAND='cd go && env $(catalyst environments show | tail -n +2 | xargs) go test -v ./... '${GO_RUN:-}';'
-      elif test_unit; then
-        COMMAND='cd go && env $(catalyst environments show | tail -n +2 | xargs) SKIP_INTEGRATION=true go test -v ./... '${GO_RUN:-}';'
-      elif test_integration; then
-        if [[ -z "${GO_RUN}" ]]; then GO_RUN="-run Integration"; fi
-        COMMAND='cd go && env $(catalyst environments show | tail -n +2 | xargs) go test -v ./... '${GO_RUN}';'
-      fi
-    fi
-    if [[ -d 'js' ]]; then
-      JEST=`require-exec jest "$LOCAL_TARGET_PACKAGE_ROOT"`
-      JEST_CONFIG="${CONFIG_PATH}/jest.config.js"
-      # the '--runInBand' is necessary for the 'seqtests' to work.
-      COMMAND="${COMMAND}${JEST} --config=${JEST_CONFIG} --runInBand ./test-staging"
-    fi
+    catalyst_test
   ;;
   build | start)
     ROLLUP=`require-exec rollup "$LOCAL_TARGET_PACKAGE_ROOT"`
     ROLLUP_CONFIG="${CONFIG_PATH}/rollup.config.js"
-    COMMAND="${ROLLUP} --config ${ROLLUP_CONFIG}"
+    COMMAND="${COMMAND}${ROLLUP} --config ${ROLLUP_CONFIG}"
     if [[ "$ACTION" == 'start' ]]; then
-      COMMAND="$COMMAND --watch"
+      COMMAND="${COMMAND} --watch"
     fi
+    COMMAND="${COMMAND};"
   ;;
   lint | lint-fix)
     ESLINT_CONFIG="${CONFIG_PATH}/eslintrc.json"
     ESLINT=`require-exec eslint "$LOCAL_TARGET_PACKAGE_ROOT"`
-    COMMAND="$ESLINT --ext .js,.jsx --config $ESLINT_CONFIG src/**"
+    COMMAND="${COMMAND}$ESLINT --ext .js,.jsx --config $ESLINT_CONFIG src/**"
     if [[ "$ACTION" == 'lint-fix' ]]; then
-      COMMAND="$COMMAND --fix"
+      COMMAND="${COMMAND} --fix"
     fi
+    COMMAND="${COMMAND};"
   ;;
   *)
     echo "Unknown catalyst-scripts action: '$ACTION'." >&2

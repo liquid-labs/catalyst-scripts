@@ -3,9 +3,12 @@
   "version": "1.0.0-alpha.6",
   "description": "Standard configurations and scripts useful when developing projects using Catalyst.",
   "scripts": {
-    "prepare": "rm -f dist/catalyst-scripts.sh && npx bash-toolkit-import && chmod a+x dist/catalyst-scripts.sh",
+    "prebuild": "mkdir -p ./dist && rm -rf ./dist/*",
+    "build": "rollup-bash ./src/catalyst-scripts.sh ./dist/catalyst-scripts.sh",
+    
+    "prepare": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "watch 'npm run prepare' ./src"
+    "watch": "watch 'npm run build' ./src"
   },
   "files": [
     "config/",
@@ -50,7 +53,7 @@
     "rollup-plugin-url": "^2.0.1"
   },
   "devDependencies": {
-    "@liquid-labs/bash-toolkit": "^1.0.0-alpha.5",
+    "@liquid-labs/bash-toolkit": "latest",
     "watch": "^1.0.2"
   },
   "catalyst": {
