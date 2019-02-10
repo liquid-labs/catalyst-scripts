@@ -1,4 +1,5 @@
 function catalyst_test() {
+  # TODO: check for 'catalyst' and issue info re. catalyst for to run integration tests
   if [[ -d 'go' ]]; then
     if [[ -n "${GO_RUN:-}" ]]; then GO_RUN="-run '${GO_RUN}'"; fi
     if test_all; then
