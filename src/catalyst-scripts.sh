@@ -43,7 +43,7 @@ function data_reset() {
 COMMAND=''
 case "$ACTION" in
   setup-scripts)
-    ADDSCRIPT=`require-exec npmAddScript "$LOCAL_TARGET_PACKAGE_ROOT"`
+    ADDSCRIPT=`require-exec npmAddScript`
     add_script build 'catalyst-scripts build'
     add_script start 'catalyst-scripts start'
     add_script lint 'catalyst-scripts lint'
@@ -85,7 +85,7 @@ case "$ACTION" in
     catalyst_test
   ;;
   build | start)
-    ROLLUP=`require-exec rollup "$LOCAL_TARGET_PACKAGE_ROOT"`
+    ROLLUP=`require-exec rollup`
     ROLLUP_CONFIG="${CONFIG_PATH}/rollup.config.js"
     COMMAND="${COMMAND}${ROLLUP} --config ${ROLLUP_CONFIG}"
     if [[ "$ACTION" == 'start' ]]; then
@@ -95,7 +95,7 @@ case "$ACTION" in
   ;;
   lint | lint-fix)
     ESLINT_CONFIG="${CONFIG_PATH}/eslintrc.json"
-    ESLINT=`require-exec eslint "$LOCAL_TARGET_PACKAGE_ROOT"`
+    ESLINT=`require-exec eslint`
     COMMAND="${COMMAND}$ESLINT --ext .js,.jsx --config $ESLINT_CONFIG src/**"
     if [[ "$ACTION" == 'lint-fix' ]]; then
       COMMAND="${COMMAND} --fix"
