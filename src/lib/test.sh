@@ -12,9 +12,13 @@ function catalyst_test() {
     fi
   fi
   if [[ -d 'js' ]]; then
-    JEST=`require-exec jest`
-    JEST_CONFIG="${CONFIG_PATH}/jest.config.js"
-    # the '--runInBand' is necessary for the 'seqtests' to work.
-    COMMAND="${COMMAND}${JEST} --config=${JEST_CONFIG} --runInBand ./test-staging"
+    if [[ ! -d ./test-staging ]]; then
+      echoerr "Did not find expected './test-staging'. Try setting the 'pretest' script:\n\"pretest\": \"catalyst-scripts pretest\""
+    else
+      JEST=`require-exec jest`
+      JEST_CONFIG="${CONFIG_PATH}/jest.config.js"
+      # the '--runInBand' is necessary for the 'seqtests' to work.
+      COMMAND="${COMMAND}${JEST} --config=${JEST_CONFIG} --runInBand ./test-staging;"
+    fi
   fi
 }
