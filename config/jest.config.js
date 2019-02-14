@@ -1,7 +1,9 @@
 // For a detailed explanation regarding each configuration property, visit:
 // https://jestjs.io/docs/en/configuration.html
 
-module.exports = {
+let pkg = require(process.cwd() + '/package.json');
+
+let config = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -181,3 +183,9 @@ module.exports = {
   // Whether to use watchman for file crawling
   // watchman: true,
 };
+
+if (pkg.catalyst) {
+  Object.assign(config, pkg.catalyst.jestConfig)
+}
+
+module.exports = config
