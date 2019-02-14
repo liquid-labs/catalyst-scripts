@@ -7,8 +7,21 @@ import url from 'rollup-plugin-url'
 
 let pkg = require(process.cwd() + '/package.json')
 
+let commonjsConfig = {
+  include: [ 'node_modules/**' ]/*,
+  namedExports: {
+    'node_modules/react/index.js': [ 'Component', 'createFactory',
+      'createElement', 'useEffect', 'useLayoutEffect', 'useState' ],
+    'node_modules/@material-ui/core/styles/index.js': [ 'withTheme',
+      'withStyles' ]
+  }*/
+}
+if (pkg.catalyst && pkg.catalyst.rollupConfig) {
+  Object.assign(commonjsConfig, pkg.catalyst.rollupConfig.commonjsConfig)
+}
+
 export default {
-  input: 'src/index.js',
+  input: 'js/index.js',
   output: [
     {
       file: pkg.main,
@@ -36,7 +49,7 @@ export default {
       plugins: [ "@babel/plugin-proposal-class-properties" ]
     }),
     resolve({ extensions: [ '.js', '.jsx' ]}),
-    commonjs()
+    commonjs(commonjsConfig)
   ],
   onwarn: function (warning) {
     // https://docs.google.com/document/d/1f4iB4H4JGZ5LbqY-IX_2FXD47aq7ZouJYhjsnzrlUVg/edit#heading=h.g37mglv4gne6
