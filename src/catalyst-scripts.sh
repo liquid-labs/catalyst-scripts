@@ -7,7 +7,9 @@ set -o pipefail
 
 ACTION="$1"; shift
 
+import echoerr
 import find_exec
+import lists
 source ./lib/test.sh
 
 CONFIG_PATH="$(npm explore @liquid-labs/catalyst-scripts -- pwd)/config"
@@ -84,19 +86,21 @@ case "$ACTION" in
   test)
     catalyst_test
   ;;
-  build | start)
-    ROLLUP=`require-exec rollup`
-    ROLLUP_CONFIG="${CONFIG_PATH}/rollup.config.js"
-    COMMAND="${COMMAND}${ROLLUP} --config ${ROLLUP_CONFIG}"
-    if [[ "$ACTION" == 'start' ]]; then
-      COMMAND="${COMMAND} --watch"
+  build | watch)
+    if [[ -d 'js' ]]; then
+      ROLLUP=`require-exec rollup`
+      ROLLUP_CONFIG="${CONFIG_PATH}/rollup.config.js"
+      COMMAND="${COMMAND}${ROLLUP} --config ${ROLLUP_CONFIG}"
+      if [[ "$ACTION" == 'watch' ]]; then
+        COMMAND="${COMMAND} --watch"
+      fi
+      COMMAND="${COMMAND};"
     fi
-    COMMAND="${COMMAND};"
   ;;
   lint | lint-fix)
     ESLINT_CONFIG="${CONFIG_PATH}/eslintrc.json"
     ESLINT=`require-exec eslint`
-    COMMAND="${COMMAND}$ESLINT --ext .js,.jsx --config $ESLINT_CONFIG src/**"
+    COMMAND="${COMMAND}$ESLINT --ext .js,.jsx --config $ESLINT_CONFIG js/**"
     if [[ "$ACTION" == 'lint-fix' ]]; then
       COMMAND="${COMMAND} --fix"
     fi
