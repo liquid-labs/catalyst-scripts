@@ -87,6 +87,9 @@ case "$ACTION" in
     catalyst_test
   ;;
   build | watch)
+    if [[ -d 'go' ]]; then
+      COMMAND="${COMMAND}cd go; go build ./...; cd ..;"
+    fi
     if [[ -d 'js' ]]; then
       ROLLUP=`require-exec rollup`
       ROLLUP_CONFIG="${CONFIG_PATH}/rollup.config.js"
