@@ -65,7 +65,7 @@ case "$ACTION" in
       elif test_integration && [[ -n "$(find go -name "sql.go" -print -quit)" ]]; then
         # Because go generally builds faster than DBs reset, we check the build
         # first to avoid possible costly and pointless DB reset.
-        COMMAND="${COMMAND}echo 'Complie check...'; cd go && go build ./...;"
+        COMMAND="${COMMAND}echo 'Complie check...'; cd go && go build ./...; cd ..;"
         # Rebuild the schema
         COMMAND="${COMMAND}"'echo "Ressetting database..."; catalyst data rebuild sql || ( EXIT=$?; echo -e "If you want to run only unit tests, you can invoke the NPM command like\nTEST_TYPES=unit npm run test"; exit $EXIT );'
         # Load test data (if any)
@@ -87,10 +87,15 @@ case "$ACTION" in
     catalyst_test
   ;;
   build | watch)
-    if [[ -d 'js' ]]; then
+    # TODO: support building specific ones
+    if [[ -d 'go' ]]; then # && ( [[ -z "${WHICH}" ]] || "go" == "${WHICH}" ]] ); then
+      COMMAND="${COMMAND}echo 'building go...'; cd go; go build ./...; cd ..;"
+      # TODO: support watch
+    fi
+    if [[ -d 'js' ]]; then # && ( [[ -z "${WHICH}" ]] || "js" == "${WHICH}" ]] ); then
       ROLLUP=`require-exec rollup`
       ROLLUP_CONFIG="${CONFIG_PATH}/rollup.config.js"
-      COMMAND="${COMMAND}${ROLLUP} --config ${ROLLUP_CONFIG}"
+      COMMAND="${COMMAND}echo 'building js...'; ${ROLLUP} --config ${ROLLUP_CONFIG}"
       if [[ "$ACTION" == 'watch' ]]; then
         COMMAND="${COMMAND} --watch"
       fi
