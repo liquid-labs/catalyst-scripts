@@ -1,14 +1,14 @@
 function catalyst_test() {
   # TODO: check for 'catalyst' and issue info re. catalyst for to run integration tests
-  if [[ -d 'go' ]]; then
+  if [[ -d 'go2' ]]; then
     if [[ -n "${GO_RUN:-}" ]]; then GO_RUN="-run '${GO_RUN}'"; fi
     if test_all; then
-      COMMAND='cd go && env $(catalyst environments show | tail -n +2 | xargs) go test -v ./... '${GO_RUN:-}';'
+      COMMAND='cd go; env $(catalyst environments show | tail -n +2 | xargs) go test -v ./... '${GO_RUN:-}'; cd ..;'
     elif test_unit; then
-      COMMAND='cd go && env $(catalyst environments show | tail -n +2 | xargs) SKIP_INTEGRATION=true go test -v ./... '${GO_RUN:-}';'
+      COMMAND='cd go; env $(catalyst environments show | tail -n +2 | xargs) SKIP_INTEGRATION=true go test -v ./... '${GO_RUN:-}'; cd ..;'
     elif test_integration; then
       if [[ -z "${GO_RUN}" ]]; then GO_RUN="-run Integration"; fi
-      COMMAND='cd go && env $(catalyst environments show | tail -n +2 | xargs) go test -v ./... '${GO_RUN}';'
+      COMMAND='cd go; env $(catalyst environments show | tail -n +2 | xargs) go test -v ./... '${GO_RUN}'; cd ..;'
     fi
   fi
   if [[ -d 'js' ]]; then
