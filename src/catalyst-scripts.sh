@@ -86,7 +86,7 @@ case "$ACTION" in
   test)
     catalyst_test
   ;;
-  build | watch)
+  build)
     # TODO: support building specific ones
     if [[ -d 'go' ]]; then # && ( [[ -z "${WHICH}" ]] || "go" == "${WHICH}" ]] ); then
       COMMAND="${COMMAND}echo 'building go...'; cd go; go build ./...; cd ..;"
@@ -95,12 +95,29 @@ case "$ACTION" in
     if [[ -d 'js' ]]; then # && ( [[ -z "${WHICH}" ]] || "js" == "${WHICH}" ]] ); then
       ROLLUP=`require-exec rollup`
       ROLLUP_CONFIG="${CONFIG_PATH}/rollup.config.js"
-      COMMAND="${COMMAND}echo 'building js...'; ${ROLLUP} --config ${ROLLUP_CONFIG}"
-      if [[ "$ACTION" == 'watch' ]]; then
-        COMMAND="${COMMAND} --watch"
-      fi
-      COMMAND="${COMMAND};"
+      COMMAND="${COMMAND}echo 'building js...';"
+      COMMAND="${COMMAND}${ROLLUP} --config ${ROLLUP_CONFIG};"
+      # TODO: make the yalc push conditional
+      COMMAND="${COMMAND}yalc push;"
     fi
+  ;;
+  watch)
+    # TODO: move this to ancillary docs.
+    # Note: we originally tried to use 'rollup --watch' directly as it it would
+    # be a bit quicker, but with the yalc push needed for sane "linking" it was
+    # hard. We tried to use a rollup plugin to push after the bundles were built
+    # but there is simple no "rollup is done" trigger and attempts to detect
+    # when rollup made things too complex. See note 'yalc-push plugin'
+    # in 'rollup.config'
+    # TODO: watch and build go and js separately
+    WATCH_DIRS=''
+    if [[ -d 'go' ]]; then
+      WATCH_DIRS="go"
+    fi
+    if [[ -d 'js' ]]; then
+      WATCH_DIRS="${WATCH_DIRS} js"
+    fi
+    COMMAND="${COMMAND}npx --no-install watch 'npx --no-install catalyst-scripts build' ${WATCH_DIRS};"
   ;;
   lint | lint-fix)
     ESLINT_CONFIG="${CONFIG_PATH}/eslintrc.json"
