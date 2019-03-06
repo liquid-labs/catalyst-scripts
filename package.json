@@ -4,10 +4,11 @@
   "description": "Standard configurations and scripts useful when developing projects using Catalyst.",
   "scripts": {
     "prebuild": "mkdir -p ./dist && rm -rf ./dist/*",
-    "build": "rollup-bash ./src/catalyst-scripts.sh ./dist/catalyst-scripts.sh",
+    "build": "rollup-bash ./src/catalyst-scripts.sh ./dist/catalyst-scripts.sh && chmod a+x ./dist/catalyst-scripts.sh",
     "prepare": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "watch 'npm run build' ./src"
+    "watch": "watch 'yalc push --no-force' ./src ./config",
+    "postyalc": "chmod a+x ~/.yalc/packages/@liquid-labs/catalyst-scripts/*/dist/catalyst-scripts.sh"
   },
   "files": [
     "config/",
