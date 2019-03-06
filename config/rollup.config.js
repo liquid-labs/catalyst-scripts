@@ -4,7 +4,6 @@ import external from 'rollup-plugin-peer-deps-external'
 import postcss from 'rollup-plugin-postcss'
 import resolve from 'rollup-plugin-node-resolve'
 import url from 'rollup-plugin-url'
-import shell from 'shelljs'
 
 const pkg = require(process.cwd() + '/package.json')
 
@@ -56,7 +55,7 @@ export default {
       {
       name: 'yalc-push',
       generateBundle: function () {
-        shell.exec(`COUNT=0 \
+        shelljs.exec(`COUNT=0 \
           && for i in $(du -s ${distDir}* | awk '{print $1}'); do \
                COUNT=$(($COUNT + 1)); \
                test $i -ne 0 || break; \
