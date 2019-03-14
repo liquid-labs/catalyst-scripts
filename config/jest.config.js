@@ -17,7 +17,7 @@ let config = {
   // cacheDirectory: "/var/folders/x7/dkrqh9dd6yd4kx0xs6st40980000gn/T/jest_dx",
 
   // Automatically clear mock calls and instances between every test
-  clearMocks: true,
+  // clearMocks: true,
 
   // Indicates whether the coverage information should be collected while executing the test
   collectCoverage: true,
@@ -129,6 +129,7 @@ let config = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
+  // TODO: should default to jsdom
   testEnvironment: "node",
 
   // Options that will be passed to the testEnvironment
