@@ -17,6 +17,7 @@
   "rules": {
     "brace-style": [2, "stroustrup", { "allowSingleLine": true }],
     "curly": [2, "multi-line"],
+    "import/export": 1,
     "indent": [2, 2, {
       "FunctionDeclaration": { "body": 1, "parameters": 2 },
       "ignoredNodes": ["JSXElement", "JSXElement > *", "JSXAttribute", "JSXIdentifier", "JSXNamespacedName", "JSXMemberExpression", "JSXSpreadAttribute", "JSXExpressionContainer", "JSXOpeningElement", "JSXClosingElement", "JSXText", "JSXEmptyExpression", "JSXSpreadChild"]
