@@ -1,5 +1,8 @@
 # Babel Transforms & Polyfills
 
+This document is tentative and should be understood as a starting point for
+[further analysis](https://github.com/Liquid-Labs/catalyst-scripts/issues/9).
+
 ## Scope & audience
 
 This document discusses the use and configuration of transforms and polyfills in
@@ -42,9 +45,9 @@ process; a process that often involves adding polyfills.
 ## Configuring shims
 
 Our current implementation uses the `transform-runtime` plugin as this is
-compatible with Rollup and [the recommended configuration](https://github.com/rollup/rollup-plugin-babel#external-dependencies). This does mean that
-libraries need to include `@babel/runtime` as a dependency so that the necessary
-shims included in the transpiled code and/or code bundle.
+compatible with Rollup and [the recommended configuration](https://github.com/rollup/rollup-plugin-babel#external-dependencies). `@babel/runtime` is included as a dependency of
+the `catalyst-scripts` package so that it is transparently available to packages
+which require it.
 
 This is based on analysis and testing with four different approaches:
 

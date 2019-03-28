@@ -5,6 +5,11 @@ import postcss from 'rollup-plugin-postcss'
 import resolve from 'rollup-plugin-node-resolve'
 import url from 'rollup-plugin-url'
 
+const babelConfig = require('./babel-shared.config.js')
+
+const rollupBabelPresets = babelConfig.rollupBabelPresets
+const babelPlugins = babelConfig.babelPlugins
+
 const pkg = require(process.cwd() + '/package.json')
 
 const commonjsConfig = {
@@ -39,11 +44,12 @@ export default {
     url(),
     babel({
       exclude: 'node_modules/**',
+      runtimeHelpers: true,
       // '"modules": false' necessary for our React apps to work with the
       // distributed library.
       // TODO: does rollup handle the modules in this case?
-      presets: [ ['@babel/preset-env', { "modules": false } ], '@babel/preset-react' ],
-      plugins: [ "@babel/plugin-proposal-class-properties" ]
+      presets: rollupBabelPresets,
+      plugins: babelPlugins
     }),
     resolve({ extensions: [ '.js', '.jsx' ]}),
     commonjs(commonjsConfig)
