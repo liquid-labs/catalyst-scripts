@@ -1,5 +1,8 @@
 # Babel Transforms & Polyfills
 
+This document is tentative and should be understood as a starting point for
+[further analysis](https://github.com/Liquid-Labs/catalyst-scripts/issues/9).
+
 ## Scope & audience
 
 This document discusses the use and configuration of transforms and polyfills in
