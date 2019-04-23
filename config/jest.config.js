@@ -29,9 +29,10 @@ let config = {
   coverageDirectory: "coverage",
 
   // An array of regexp pattern strings used to skip coverage collection
-  // coveragePathIgnorePatterns: [
-  //   "/node_modules/"
-  // ],
+  coveragePathIgnorePatterns: [
+     "/node_modules/",
+     "/testlib/",
+  ],
 
   // A list of reporter names that Jest uses when writing coverage reports
   coverageReporters: [
@@ -127,6 +128,8 @@ let config = {
 
   // A list of paths to snapshot serializer modules Jest should use for snapshot testing
   // snapshotSerializers: [],
+
+  snapshotResolver: process.cwd() + '/node_modules/@liquid-labs/catalyst-scripts/config/jestSnapshotResolver',
 
   // The test environment that will be used for testing
   // TODO: should default to jsdom
