@@ -1,15 +1,4 @@
 function catalyst_pretest() {
-  # TODO https://github.com/Liquid-Labs/catalyst-cli/issues/28
-  if test_integration; then # make sure necessary services are running
-    echo -n "Checking services... "
-    if ! catalyst services list --show-status --exit-on-stopped > /dev/null; then
-      echo
-      echoerrandexit "Some services are not running. You can either run unit tests are start services. Try one of the following:\ncatalyst packages test --types=unit\ncatalyst services start"
-    else
-      echo "looks good." # TODO: colorize
-    fi
-  fi
-
   if [[ -d 'go' ]]; then
     if ! data_reset; then
       COMMAND="${COMMAND}echo 'Skippeng DB reset.';"
