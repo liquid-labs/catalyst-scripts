@@ -51,7 +51,7 @@ export default {
       presets: rollupBabelPresets,
       plugins: babelPlugins
     }),
-    resolve({ extensions: [ '.js', '.jsx' ]}),
+    resolve({ extensions: [ '.js', '.jsx' ], preferBuiltins: true }),
     commonjs(commonjsConfig)
     // TODO: move this to ancillary docs.
     /*Attempted to create a 'yalc-push plugin', but there is just not
