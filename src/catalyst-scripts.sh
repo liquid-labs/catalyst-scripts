@@ -13,7 +13,8 @@ import lists
 source ./lib/pretest.sh
 source ./lib/test.sh
 
-CONFIG_PATH="$(npm explore @liquid-labs/catalyst-scripts -- pwd)/config"
+SCRIPTS_INSTALL="$(npm explore @liquid-labs/catalyst-scripts -- pwd)"
+CONFIG_PATH="${SCRIPTS_INSTALL}/config"
 
 _ADD_SCRIPT_WARNING=false
 function add_script() {
@@ -46,7 +47,7 @@ function data_reset() {
 COMMAND=''
 case "$ACTION" in
   setup-scripts)
-    ADDSCRIPT=`require-exec npmAddScript`
+    ADDSCRIPT=$(require-exec npmAddScript)
     add_script build 'catalyst-scripts build'
     add_script start 'catalyst-scripts start'
     add_script lint 'catalyst-scripts lint'
@@ -72,7 +73,7 @@ case "$ACTION" in
       # TODO: support watch
     fi
     if [[ -d 'js' ]]; then # && ( [[ -z "${WHICH}" ]] || "js" == "${WHICH}" ]] ); then
-      ROLLUP=`require-exec rollup`
+      ROLLUP=$(require-exec rollup)
       ROLLUP_CONFIG="${CONFIG_PATH}/rollup.config.js"
       COMMAND="${COMMAND}echo 'building js...';"
       COMMAND="${COMMAND}${ROLLUP} --config ${ROLLUP_CONFIG};"
@@ -100,7 +101,7 @@ case "$ACTION" in
   ;;
   lint | lint-fix)
     ESLINT_CONFIG="${CONFIG_PATH}/eslintrc.json"
-    ESLINT=`require-exec eslint`
+    ESLINT=$(require-exec eslint)
     COMMAND="${COMMAND}$ESLINT --ext .js,.jsx --config $ESLINT_CONFIG js/**"
     if [[ "$ACTION" == 'lint-fix' ]]; then
       COMMAND="${COMMAND} --fix"
