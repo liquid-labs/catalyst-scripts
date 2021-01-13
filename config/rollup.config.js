@@ -12,6 +12,8 @@ const babelPlugins = babelConfig.babelPlugins
 
 const pkg = require(process.cwd() + '/package.json')
 
+const jsSrc = process.env.JS_SRC || 'js'
+
 const commonjsConfig = {
   include: [ 'node_modules/**' ]
 }
@@ -20,7 +22,7 @@ if (pkg.catalyst && pkg.catalyst.rollupConfig) {
 }
 
 export default {
-  input: 'js/index.js',
+  input: `${jsSrc}/index.js`,
   output: [
     {
       file: pkg.main,

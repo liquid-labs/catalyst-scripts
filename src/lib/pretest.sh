@@ -16,10 +16,10 @@ function catalyst_pretest() {
       fi
     fi
   fi
-  if [[ -d 'js' ]]; then
+  if [[ -d "${JS_SRC}" ]]; then
     BABEL=`require-exec babel`
     BABEL_CONFIG="${CONFIG_PATH}/babel.config.js"
     # Jest is not picking up the external maps, so we inline them for the test.
-    COMMAND="${COMMAND}rm -rf test-staging; ${BABEL} --config-file ${BABEL_CONFIG} ./js --out-dir test-staging --source-maps=inline"
+    COMMAND="${COMMAND}rm -rf test-staging; ${BABEL} --config-file ${BABEL_CONFIG} ./${JS_SRC} --out-dir test-staging --source-maps=inline"
   fi
 }

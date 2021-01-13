@@ -1,14 +1,16 @@
+jsSrc = process.env.JS_SRC || 'js'
+
 module.exports = {
   // resolves from test to snapshot path
   resolveSnapshotPath: (testPath, snapshotExtension) =>
     testPath
-      .replace('/test-staging/', '/js/')
+      .replace('/test-staging/', '/' + jsSrc + '/')
       .replace('__tests__', '__snapshots__') + snapshotExtension,
 
   // resolves from snapshot to test path
   resolveTestPath: (snapshotFilePath, snapshotExtension) =>
     snapshotFilePath
-      .replace('/js/', '/test-staging/')
+      .replace('/' + jsSrc + '/', '/test-staging/')
       .replace('__snapshots__', '__tests__')
       .slice(0, -snapshotExtension.length),
 

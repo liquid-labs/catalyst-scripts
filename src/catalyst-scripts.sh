@@ -15,6 +15,7 @@ source ./lib/test.sh
 
 SCRIPTS_INSTALL="$(npm explore @liquid-labs/catalyst-scripts -- pwd)"
 CONFIG_PATH="${SCRIPTS_INSTALL}/config"
+[[ -n "${JS_SRC:-}" ]] || JS_SRC='js'
 
 _ADD_SCRIPT_WARNING=false
 function add_script() {
@@ -72,13 +73,14 @@ case "$ACTION" in
       COMMAND="${COMMAND}echo 'building go...'; cd go; go build ./...; cd ..;"
       # TODO: support watch
     fi
-    if [[ -d 'js' ]]; then # && ( [[ -z "${WHICH}" ]] || "js" == "${WHICH}" ]] ); then
+    if [[ -d "${JS_SRC}" ]]; then # && ( [[ -z "${WHICH}" ]] || "js" == "${WHICH}" ]] ); then
       ROLLUP=$(require-exec rollup)
       ROLLUP_CONFIG="${CONFIG_PATH}/rollup.config.js"
       COMMAND="${COMMAND}echo 'building js...';"
       COMMAND="${COMMAND}${ROLLUP} --config ${ROLLUP_CONFIG};"
       # TODO: make the yalc push conditional
-      COMMAND="${COMMAND}yalc push;"
+      # TODO: 'yalc push' was triggering 'npm prepare' which was running lint and build and then (somehow) causing an infinite loop
+      # COMMAND="${COMMAND}yalc push;"
     fi
   ;;
   watch)
@@ -102,7 +104,7 @@ case "$ACTION" in
   lint | lint-fix)
     ESLINT_CONFIG="${CONFIG_PATH}/eslintrc.json"
     ESLINT=$(require-exec eslint)
-    COMMAND="${COMMAND}$ESLINT --ext .js,.jsx --config $ESLINT_CONFIG js/**"
+    COMMAND="${COMMAND}$ESLINT --ext .js,.jsx --config $ESLINT_CONFIG ${JS_SRC}/**"
     if [[ "$ACTION" == 'lint-fix' ]]; then
       COMMAND="${COMMAND} --fix"
     fi
