@@ -17,6 +17,7 @@ exports.rollupBabelPresets = [
 exports.babelPlugins = [
   '@babel/plugin-proposal-class-properties',
   '@babel/plugin-proposal-optional-chaining',
+  '@babel/plugin-proposal-throw-expressions',
   [ '@babel/plugin-transform-runtime',
     { corejs: false, helpers: true, regenerator: true, useESModules: false }
   ]
