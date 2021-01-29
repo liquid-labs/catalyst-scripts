@@ -1,6 +1,6 @@
 exports.babelPresets = [
   '@babel/preset-env',
-  '@babel/preset-react'
+  '@babel/preset-react' // TODO: make this conditional... maybe add in the rollup.config.js?
 ];
 
 exports.rollupBabelPresets = [
