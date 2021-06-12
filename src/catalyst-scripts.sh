@@ -102,7 +102,7 @@ case "$ACTION" in
     COMMAND="${COMMAND}npx --no-install watch 'npx --no-install catalyst-scripts build' ${WATCH_DIRS};"
   ;;
   lint | lint-fix)
-    ESLINT_CONFIG="${CONFIG_PATH}/eslintrc.json"
+    ESLINT_CONFIG="${CONFIG_PATH}/eslintrc.js"
     ESLINT=$(require-exec eslint)
     COMMAND="${COMMAND}$ESLINT --ext .js,.jsx --config $ESLINT_CONFIG ${JS_SRC}/**"
     if [[ "$ACTION" == 'lint-fix' ]]; then

@@ -1,19 +1,22 @@
-{
-  "parser": "babel-eslint",
+const pkg = require(process.cwd() + '/package.json');
+
+const eslintConfig = {
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "sourceType": "module",
+    "requireConfigFile" : "false",
+    "babelOptions": {
+      "configFile": __dirname + "/babel.config.js"
+    }
+  },
   "extends": [
     "standard",
-    "standard-react",
     "eslint:recommended"
   ],
   "env": {
     "es6": true
   },
-  "plugins": [
-    "react"
-  ],
-  "parserOptions": {
-    "sourceType": "module"
-  },
+  "plugins": [],
   "rules": {
     "brace-style": [2, "stroustrup", { "allowSingleLine": true }],
     "curly": [2, "multi-line"],
@@ -37,8 +40,6 @@
     "operator-linebreak": [2, "before", { "overrides": { "=": "after" } }],
     "prefer-const": 2,
     "prefer-spread": 2,
-    "react/jsx-boolean-value": [2, "never"],
-    "react/jsx-indent-props": [2, 4],
     "space-before-function-paren": [2, "never"],
 
     "array-callback-return": 2,
@@ -52,4 +53,15 @@
     "no-with": 2,
     "yoda": 2
   }
+};
+
+if (pkg.liq && pkg.liq.packageType && /\|react(\|$)/.test(liq.packageType)) {
+  eslintConfig.extends.push("standard-react");
+  eslintConfig.plugins.push("react");
+  Object.assign(eslintConfig.rules, {
+    "react/jsx-boolean-value" : [2, "never"],
+    "react/jsx-indent-props": [2, 4]
+  });
 }
+
+module.exports = eslintConfig;

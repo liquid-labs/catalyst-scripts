@@ -4,7 +4,7 @@
   "description": "Standard configurations and scripts useful when developing projects using Catalyst.",
   "scripts": {
     "prebuild": "mkdir -p ./dist && rm -rf ./dist/*",
-    "build": "rollup-bash ./src/catalyst-scripts.sh ./dist/catalyst-scripts.sh && chmod a+x ./dist/catalyst-scripts.sh",
+    "build": "bash-rollup ./src/catalyst-scripts.sh ./dist/catalyst-scripts.sh && chmod a+x ./dist/catalyst-scripts.sh",
     "prepare": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "watch 'yalc push --no-force' ./src ./config",
@@ -58,6 +58,7 @@
     "rollup-plugin-url": "^3.0.1"
   },
   "devDependencies": {
+    "@liquid-labs/bash-rollup": "*",
     "@liquid-labs/bash-toolkit": "^1.0.0-alpha.40",
     "watch": "^0.13.0"
   },
