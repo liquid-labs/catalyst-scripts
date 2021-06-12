@@ -1,4 +1,4 @@
-const pkg = require(process.cwd() + '/package.json');
+const pkglib = require('./pkglib.js');
 
 const eslintConfig = {
   "parser": "@babel/eslint-parser",
@@ -55,7 +55,7 @@ const eslintConfig = {
   }
 };
 
-if (pkg.liq && pkg.liq.packageType && /\|react(\|$)/.test(liq.packageType)) {
+if (pkglib.isTargetReactish) {
   eslintConfig.extends.push("standard-react");
   eslintConfig.plugins.push("react");
   Object.assign(eslintConfig.rules, {
