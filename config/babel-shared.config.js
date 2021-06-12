@@ -7,7 +7,7 @@ const rollupBabelPresets = [
   [ '@babel/preset-env', { 'modules': false } ]
 ];
 
-if (pkglib.isTargetReactish) {
+if (pkglib.target.isReactish) {
   babelPresets.push('@babel/preset-react')
   rollupBabelPresets.push('@babel/preset-react')
 }

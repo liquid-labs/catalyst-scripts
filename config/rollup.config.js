@@ -1,6 +1,7 @@
 import babel from 'rollup-plugin-babel'
 import commonjs from 'rollup-plugin-commonjs'
-import external from 'rollup-plugin-peer-deps-external'
+import peerDepExternals from 'rollup-plugin-peer-deps-external'
+import nodeExternals from 'rollup-plugin-node-externals'
 import postcss from 'rollup-plugin-postcss'
 import resolve from 'rollup-plugin-node-resolve'
 import url from 'rollup-plugin-url'
@@ -10,7 +11,7 @@ const babelConfig = require('./babel-shared.config.js')
 const rollupBabelPresets = babelConfig.rollupBabelPresets
 const babelPlugins = babelConfig.babelPlugins
 
-const pkg = require(process.cwd() + '/package.json')
+const pkglib = require('./pkglib.js')
 
 const jsSrc = process.env.JS_SRC || 'js'
 const sourcemap = process.env.JS_SOURCEMAP || 'inline'
@@ -26,12 +27,12 @@ const determineOutput = function() {
       ]
     : [
         {
-          file: pkg.main,
+          file: pkglib.packageJson.main,
           format: 'cjs',
           sourcemap: 'inline'
         },
         {
-          file: pkg.module,
+          file: pkglib.packageJson.module,
           format: 'es',
           sourcemap: sourcemap
         }
@@ -41,18 +42,18 @@ const determineOutput = function() {
 const commonjsConfig = {
   include: [ 'node_modules/**' ]
 }
-if (pkg.catalyst && pkg.catalyst.rollupConfig) {
-  Object.assign(commonjsConfig, pkg.catalyst.rollupConfig.commonjsConfig)
+if (pkglib.target.rollupConfig) {
+  Object.assign(commonjsConfig, pkglib.target.rollupConfig.commonjsConfig)
 }
 
-export default {
+const rollupConfig = {
   input: `${jsSrc}/index.js`,
   output: determineOutput(),
   watch: {
     clearScreen: false
   },
   plugins: [
-    external(),
+    peerDepExternals(),
     postcss({
       modules: true
     }),
@@ -92,3 +93,9 @@ export default {
     console.error(warning.message);
   }
 }
+
+if (pkglib.target.isNodeish) {
+  rollupConfig.plugins.splice(0, 0, nodeExternals())
+}
+
+export default rollupConfig

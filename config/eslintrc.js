@@ -55,7 +55,7 @@ const eslintConfig = {
   }
 };
 
-if (pkglib.isTargetReactish) {
+if (pkglib.target.isReactish) {
   eslintConfig.extends.push("standard-react");
   eslintConfig.plugins.push("react");
   Object.assign(eslintConfig.rules, {
