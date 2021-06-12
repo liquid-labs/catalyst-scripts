@@ -13,6 +13,30 @@ const babelPlugins = babelConfig.babelPlugins
 const pkg = require(process.cwd() + '/package.json')
 
 const jsSrc = process.env.JS_SRC || 'js'
+const sourcemap = process.env.JS_SOURCEMAP || 'inline'
+
+const determineOutput = function() {
+  return process.env.JS_OUT
+    ? [
+        {
+          file: process.env.JS_OUT,
+          format: 'cjs',
+          sourcemap: sourcemap
+        }
+      ]
+    : [
+        {
+          file: pkg.main,
+          format: 'cjs',
+          sourcemap: 'inline'
+        },
+        {
+          file: pkg.module,
+          format: 'es',
+          sourcemap: sourcemap
+        }
+      ]
+}
 
 const commonjsConfig = {
   include: [ 'node_modules/**' ]
@@ -23,18 +47,7 @@ if (pkg.catalyst && pkg.catalyst.rollupConfig) {
 
 export default {
   input: `${jsSrc}/index.js`,
-  output: [
-    {
-      file: pkg.main,
-      format: 'cjs',
-      sourcemap: true
-    },
-    {
-      file: pkg.module,
-      format: 'es',
-      sourcemap: true
-    }
-  ],
+  output: determineOutput(),
   watch: {
     clearScreen: false
   },
