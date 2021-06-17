@@ -13,7 +13,7 @@ function catalyst_test() {
   fi
   if [[ -d test-staging ]]; then
     if ls ./test-staging/*.js > /dev/null 2>&1; then
-      JEST=`require-exec jest`
+      JEST="$(require-exec jest '@liquid-labs/catalyst-scripts')"
       JEST_CONFIG="${CONFIG_PATH}/jest.config.js"
       # the '--runInBand' is necessary for the 'seqtests' to work.
       COMMAND="${COMMAND}${JEST} --config=${JEST_CONFIG} --runInBand ./test-staging;"
