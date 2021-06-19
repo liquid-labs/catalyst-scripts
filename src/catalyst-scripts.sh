@@ -15,7 +15,21 @@ source ./lib/test.sh
 
 SCRIPTS_INSTALL="$(npm explore @liquid-labs/catalyst-scripts -- pwd)"
 CONFIG_PATH="${SCRIPTS_INSTALL}/config"
-[[ -n "${JS_SRC:-}" ]] || JS_SRC='js'
+# TODO: support 'JS_DIR' and deprecate 'JS_SRC'
+# TODO: deprecate auto-build of js directory since we prefer to use 'src' as default, but don't want to auto-build src
+if [[ -n "${JS_SRC:-}" ]] && [[ -n "${JS_FILE:-}" ]]; then
+  echoerrandexit "Cannot specify both 'JS_SRC' and 'JS_FILE'"
+fi
+# maintain (soon to be deprecated) default 'js' build
+[[ -n "${JS_FILE:-}" ]] || [[ -n "${JS_SRC:-}" ]] || JS_SRC='js'
+# now we set up the references that we need for the build and lint commands
+if [[ -n "${JS_FILE:-}" ]]; then
+  JS_BUILD_TARGET="${JS_FILE}"
+  JS_LINT_TARGET="${JS_FILE}"
+elif [[ -d "$JS_SRC" ]]; then
+  JS_BUILD_TARGET="${JS_SRC}/index.js"
+  JS_LINT_TARGET="${JS_SRC}/**"
+fi
 
 _ADD_SCRIPT_WARNING=false
 function add_script() {
@@ -69,18 +83,21 @@ case "$ACTION" in
   ;;
   build)
     # TODO: support building specific ones
-    if [[ -d 'go' ]]; then # && ( [[ -z "${WHICH}" ]] || "go" == "${WHICH}" ]] ); then
+    if [[ -d 'go' ]]; then
       COMMAND="${COMMAND}echo 'building go...'; cd go; go build ./...; cd ..;"
       # TODO: support watch
     fi
-    if [[ -d "${JS_SRC}" ]]; then # && ( [[ -z "${WHICH}" ]] || "js" == "${WHICH}" ]] ); then
-      ROLLUP=$(require-exec rollup)
+    if [[ -f "${JS_BUILD_TARGET:-}" ]]; then
+      ROLLUP="JS_BUILD_TARGET='${JS_BUILD_TARGET}' $(require-exec rollup)"
       ROLLUP_CONFIG="${CONFIG_PATH}/rollup.config.js"
       COMMAND="${COMMAND}echo 'building js...';"
       COMMAND="${COMMAND}${ROLLUP} --config ${ROLLUP_CONFIG};"
       # TODO: make the yalc push conditional
       # TODO: 'yalc push' was triggering 'npm prepare' which was running lint and build and then (somehow) causing an infinite loop
       # COMMAND="${COMMAND}yalc push;"
+    fi
+    if [[ -z "${COMMAND:-}" ]]; then
+      echoerrandexit "Did not find anything to build. Did you need to specify JS_SRC or JS_FILE? Recall, 'JS_SRC' is used to target a directory containing an 'index.js' file and potentially other '.js' files. 'JS_FILE' is used to specify a single target file. Using 'JS_SRC' to target a file can cause this error."
     fi
   ;;
   watch)
@@ -104,7 +121,7 @@ case "$ACTION" in
   lint | lint-fix)
     ESLINT_CONFIG="${CONFIG_PATH}/eslintrc.js"
     ESLINT=$(require-exec eslint)
-    COMMAND="${COMMAND}$ESLINT --ext .js,.jsx --config $ESLINT_CONFIG ${JS_SRC}/**"
+    COMMAND="${COMMAND}$ESLINT --ext .js,.jsx --config ${ESLINT_CONFIG} ${JS_LINT_TARGET}"
     if [[ "$ACTION" == 'lint-fix' ]]; then
       COMMAND="${COMMAND} --fix"
     fi

@@ -13,8 +13,11 @@ const babelPlugins = babelConfig.babelPlugins
 
 const pkglib = require('./pkglib.js')
 
-const jsSrc = process.env.JS_SRC || 'js'
+const jsInput = process.env.JS_BUILD_TARGET || 'js/index.js' // default
+
 const sourcemap = process.env.JS_SOURCEMAP || 'inline'
+
+console.error('process.env.JS_OUT', process.env.JS_OUT)
 
 const determineOutput = function() {
   return process.env.JS_OUT
@@ -29,7 +32,7 @@ const determineOutput = function() {
         {
           file: pkglib.packageJson.main,
           format: 'cjs',
-          sourcemap: 'inline'
+          sourcemap: sourcemap
         },
         {
           file: pkglib.packageJson.module,
@@ -47,7 +50,7 @@ if (pkglib.target.rollupConfig) {
 }
 
 const rollupConfig = {
-  input: `${jsSrc}/index.js`,
+  input: jsInput,
   output: determineOutput(),
   watch: {
     clearScreen: false

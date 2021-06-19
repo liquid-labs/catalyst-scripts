@@ -67,10 +67,8 @@
     "orgBase": "git@github.com:Liquid-Labs/Liquid-Labs.git",
     "changeControl": {
       "type": "code"
-    }
-  },
-  "catalyst": {
-    "version-check": {
+    },
+    "versionCheck": {
       "ignore": [],
       "options": "--skip-unused"
     }
