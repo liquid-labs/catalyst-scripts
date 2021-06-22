@@ -28,7 +28,7 @@ if [[ -n "${JS_FILE:-}" ]]; then
   JS_LINT_TARGET="${JS_FILE}"
 elif [[ -d "${JS_SRC}" ]]; then
   JS_BUILD_TARGET="${JS_SRC}/index.js"
-  JS_LINT_TARGET="${JS_SRC}/**"
+  JS_LINT_TARGET="${JS_SRC}/**/*.js"
 fi
 
 _ADD_SCRIPT_WARNING=false
