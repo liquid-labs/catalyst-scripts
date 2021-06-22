@@ -26,7 +26,7 @@ fi
 if [[ -n "${JS_FILE:-}" ]]; then
   JS_BUILD_TARGET="${JS_FILE}"
   JS_LINT_TARGET="${JS_FILE}"
-elif [[ -d "$JS_SRC" ]]; then
+elif [[ -d "${JS_SRC}" ]]; then
   JS_BUILD_TARGET="${JS_SRC}/index.js"
   JS_LINT_TARGET="${JS_SRC}/**"
 fi
