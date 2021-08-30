@@ -1,6 +1,6 @@
 import babel from 'rollup-plugin-babel'
 import commonjs from 'rollup-plugin-commonjs'
-import peerDepExternals from 'rollup-plugin-peer-deps-external'
+import excludeDependenciesFromBundle from 'rollup-plugin-exclude-dependencies-from-bundle'
 import nodeExternals from 'rollup-plugin-node-externals'
 import postcss from 'rollup-plugin-postcss'
 import resolve from 'rollup-plugin-node-resolve'
@@ -20,26 +20,32 @@ const sourcemap = process.env.JS_SOURCEMAP || 'inline'
 console.error('process.env.JS_OUT', process.env.JS_OUT)
 
 const determineOutput = function() {
-  return process.env.JS_OUT
-    ? [
-        {
-          file: process.env.JS_OUT,
-          format: 'cjs',
-          sourcemap: sourcemap
-        }
-      ]
-    : [
-        {
-          file: pkglib.packageJson.main,
-          format: 'cjs',
-          sourcemap: sourcemap
-        },
-        {
-          file: pkglib.packageJson.module,
-          format: 'es',
-          sourcemap: sourcemap
-        }
-      ]
+  const output = []
+
+  let file = process.env.JS_OUT
+  const format = pkglib.packageJson.type === 'module' ? 'es' : 'cjs'
+
+  if (file !== undefined) {
+    output.push({ file, format, sourcemap })
+  }
+  else {
+    if (pkglib.packageJson.main !== undefined) {
+      output.push({
+        file: pkglib.packageJson.main,
+        format,
+        sourcemap
+      })
+    }
+    if (pkglib.packageJson.module !== undefined) {
+      output.push({
+        file: pkglib.packageJson.module,
+        format: 'es',
+        sourcemap
+      })
+    }
+  }
+
+  return output
 }
 
 const commonjsConfig = {
@@ -56,7 +62,7 @@ const rollupConfig = {
     clearScreen: false
   },
   plugins: [
-    peerDepExternals(),
+    excludeDependenciesFromBundle({ peerDependencies: true, dependencies: true }),
     postcss({
       modules: true
     }),
