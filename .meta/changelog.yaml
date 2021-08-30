@@ -1,0 +1,19 @@
+- startTimestamp: 2021-08-30T22:53:20.880Z
+  startEpochMillis: 1630364000880
+  issues:
+    - https://github.com/Liquid-Labs/catalyst-scripts/issues/18
+    - https://github.com/Liquid-Labs/catalyst-scripts/issues/19
+  branch: 2021.08.30-zane@liquid-labs.com-support_es_format_output
+  branchFrom: a378a59d5108c000f70e82476af06aa17368714f
+  workInitiator: zane@liquid-labs.com
+  branchInitiator: zane@liquid-labs.com
+  involvedProjects:
+    - "@liquid-labs/catalyst-scripts"
+  changeNotes:
+    - Better support JavaScript es format output
+    - Exclude all non-dev dependencies from rollup.
+  securityNotes: []
+  drpBcpNotes: []
+  backoutNotes: []
+  contributors:
+    - Zane Rockenbaugh <zane@liquid-labs.com>
