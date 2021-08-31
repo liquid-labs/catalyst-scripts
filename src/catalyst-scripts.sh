@@ -119,6 +119,8 @@ case "$ACTION" in
     COMMAND="${COMMAND}npx --no-install watch 'npx --no-install catalyst-scripts build' ${WATCH_DIRS};"
   ;;
   lint | lint-fix)
+    [[ -n "${JS_LINT_TARGET:-}" ]] \
+      || JS_LINT_TARGET=$(jq -r '.liq.eslint.target' package.json)
     ESLINT_CONFIG="${CONFIG_PATH}/eslintrc.js"
     ESLINT=$(require-exec eslint)
     COMMAND="${COMMAND}$ESLINT --ext .js,.jsx --config ${ESLINT_CONFIG} ${JS_LINT_TARGET}"
