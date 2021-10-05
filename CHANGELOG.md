@@ -15,3 +15,4 @@
 
 ## Release 1.0.0-alpha.46
 * _**hotfix**_: fix const typo _(zane@liquid-labs.com; 2021-10-05T23:57:06.000Z)_
+* _**hotfix**_: updated CHANGELOGE.md for release (by liq) _(zane@liquid-labs.com; 2021-10-05T23:57:12.000Z)_
