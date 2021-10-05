@@ -14,8 +14,8 @@ const babelPlugins = babelConfig.babelPlugins
 const pkglib = require('./pkglib.js')
 
 const jsInput = process.env.JS_BUILD_TARGET || 'js/index.js' // default
-
 const sourcemap = process.env.JS_SOURCEMAP || 'inline'
+const format = process.env.JS_FORMAT || null // TBD via packageJson
 
 console.error('process.env.JS_OUT', process.env.JS_OUT)
 
@@ -23,7 +23,9 @@ const determineOutput = function() {
   const output = []
 
   let file = process.env.JS_OUT
-  const format = pkglib.packageJson.type === 'module' ? 'es' : 'cjs'
+  if (format === null) {
+    format = pkglib.packageJson.type === 'module' ? 'es' : 'cjs'
+  }
 
   if (file !== undefined) {
     output.push({ file, format, sourcemap })
