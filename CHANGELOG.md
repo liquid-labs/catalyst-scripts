@@ -19,3 +19,6 @@
 
 ## Release 1.0.0-alpha.47
 * _**hotfix**_: add rollup json plugin _(zane@liquid-labs.com; 2021-10-06T00:49:52.000Z)_
+
+## Release 1.0.0-alpha.48
+* _**hotfix**_: audit fixes _(zane@liquid-labs.com; 2021-10-06T00:53:16.000Z)_
