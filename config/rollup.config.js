@@ -1,6 +1,7 @@
 import babel from 'rollup-plugin-babel'
 import commonjs from 'rollup-plugin-commonjs'
 import excludeDependenciesFromBundle from 'rollup-plugin-exclude-dependencies-from-bundle'
+import json from '@rollup/plugin-json'
 import nodeExternals from 'rollup-plugin-node-externals'
 import postcss from 'rollup-plugin-postcss'
 import resolve from 'rollup-plugin-node-resolve'
@@ -68,6 +69,7 @@ const rollupConfig = {
     postcss({
       modules: true
     }),
+    json(),
     url(),
     babel({
       exclude: 'node_modules/**',
