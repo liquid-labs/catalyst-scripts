@@ -1,7 +1,15 @@
+// Let's rollup work with babel.
 import babel from 'rollup-plugin-babel'
 import commonjs from 'rollup-plugin-commonjs'
+// This makes it so that we include "devDependencies", but not "dependencies" in the rolled up scirpt. This allows us
+// to choose which libraries to include directly and which to load.
 import excludeDependenciesFromBundle from 'rollup-plugin-exclude-dependencies-from-bundle'
+// Add support for imported JSON files which otherwise cause silent, strange errors.
 import json from '@rollup/plugin-json'
+// Adds license information to the rolled up output file.
+import license from 'rollup-plugin-license'
+// Teaches rollup to treat `import * as fs from 'fs'` and similar as known externals. This license is conditionally
+// included depending on the declared package type.
 import nodeExternals from 'rollup-plugin-node-externals'
 import postcss from 'rollup-plugin-postcss'
 import resolve from 'rollup-plugin-node-resolve'
@@ -109,6 +117,17 @@ const rollupConfig = {
 
 if (pkglib.target.isNodeish) {
   rollupConfig.plugins.splice(0, 0, nodeExternals())
+}
+
+if (pkglib.target.licenseText) {
+  rollupConfig.plugins.splice(0, 0, license({
+    banner: {
+      commentStyle: 'ignored', // tells minifiers to leave it
+      content: {
+        file: pkglib.target.licenseText
+      }
+    }
+  }))
 }
 
 export default rollupConfig

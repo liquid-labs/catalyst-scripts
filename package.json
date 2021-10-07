@@ -54,6 +54,7 @@
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.20",
+    "rollup-plugin-license": "^2.6.0",
     "rollup-plugin-node-externals": "^2.2.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-postcss": "^4.0.1",
