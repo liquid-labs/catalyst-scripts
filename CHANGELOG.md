@@ -26,3 +26,4 @@
 
 ## Release 1.0.0-alpha.49
 * _**hotfix**_: add 'rollup-plugin-license' _(zane@liquid-labs.com; 2021-10-07T02:52:48.000Z)_
+* _**hotfix**_: updated CHANGELOGE.md for release (by liq) _(zane@liquid-labs.com; 2021-10-07T02:53:06.000Z)_
