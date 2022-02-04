@@ -31,3 +31,7 @@
 ## Release 1.0.0-alpha.50
 * _**hotfix**_: audit fixes _(zane@liquid-labs.com; 2021-10-07T18:57:28.000Z)_
 * _**hotfix**_: updated CHANGELOGE.md for release (by liq) _(zane@liquid-labs.com; 2021-10-07T18:57:39.000Z)_
+
+## Release 1.0.0-alpha.51
+* _**hotfix**_: package updates _(zane@liquid-labs.com; 2022-01-26T19:51:33.000Z)_
+* _**hotfix**_: rollup deps again _(zane@liquid-labs.com; 2022-02-04T05:47:20.000Z)_
