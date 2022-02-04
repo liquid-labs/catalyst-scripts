@@ -26,8 +26,6 @@ const jsInput = process.env.JS_BUILD_TARGET || 'js/index.js' // default
 const sourcemap = process.env.JS_SOURCEMAP || 'inline'
 let format = process.env.JS_FORMAT || null // TBD via packageJson
 
-console.error('process.env.JS_OUT', process.env.JS_OUT)
-
 const determineOutput = function() {
   const output = []
 
@@ -73,7 +71,7 @@ const rollupConfig = {
     clearScreen: false
   },
   plugins: [
-    excludeDependenciesFromBundle({ peerDependencies: true, dependencies: true }),
+    // excludeDependenciesFromBundle({ peerDependencies: true/*, dependencies: true*/ }),
     postcss({
       modules: true
     }),
