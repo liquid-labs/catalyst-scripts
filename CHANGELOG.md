@@ -35,3 +35,6 @@
 ## Release 1.0.0-alpha.51
 * _**hotfix**_: package updates _(zane@liquid-labs.com; 2022-01-26T19:51:33.000Z)_
 * _**hotfix**_: rollup deps again _(zane@liquid-labs.com; 2022-02-04T05:47:20.000Z)_
+
+## Release 1.0.0-alpha.52
+* Initial implementation _(zane@liquid-labs.com; 2022-02-28T06:02:25.642Z)_
