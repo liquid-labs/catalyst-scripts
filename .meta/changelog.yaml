@@ -8,6 +8,10 @@
   workInitiator: zane@liquid-labs.com
   branchInitiator: zane@liquid-labs.com
   involvedProjects:
+    - "@liquid-labs/liq-alerts"
+    - "@liquid-labs/liq-core"
+    - "@liquid-labs/orgs-model"
+    - "@liquid-labs/liq-cli"
     - "@liquid-labs/catalyst-scripts"
   changeNotes:
     - Better support JavaScript es format output
