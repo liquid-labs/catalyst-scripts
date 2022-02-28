@@ -1,9 +1,6 @@
 // Let's rollup work with babel.
 import babel from 'rollup-plugin-babel'
 import commonjs from 'rollup-plugin-commonjs'
-// This makes it so that we include "devDependencies", but not "dependencies" in the rolled up scirpt. This allows us
-// to choose which libraries to include directly and which to load.
-import excludeDependenciesFromBundle from 'rollup-plugin-exclude-dependencies-from-bundle'
 // Add support for imported JSON files which otherwise cause silent, strange errors.
 import json from '@rollup/plugin-json'
 // Adds license information to the rolled up output file.
@@ -12,12 +9,12 @@ import license from 'rollup-plugin-license'
 // included depending on the declared package type.
 import nodeExternals from 'rollup-plugin-node-externals'
 import postcss from 'rollup-plugin-postcss'
-import resolve from 'rollup-plugin-node-resolve'
+import resolve from '@rollup/plugin-node-resolve'
 import url from 'rollup-plugin-url'
 
 const babelConfig = require('./babel-shared.config.js')
 
-const rollupBabelPresets = babelConfig.rollupBabelPresets
+const babelPresets = babelConfig.babelPresets
 const babelPlugins = babelConfig.babelPlugins
 
 const pkglib = require('./pkglib.js')
@@ -53,6 +50,11 @@ const determineOutput = function() {
       })
     }
   }
+  if (pkglib.target.isNodeish) {
+    for (const entry of output) {
+      entry.generatedCode = "es2015"
+    }
+  }
 
   return output
 }
@@ -71,23 +73,29 @@ const rollupConfig = {
     clearScreen: false
   },
   plugins: [
+    // TODO: I think it would be cleaner to add this back in and then verify that's compatible with the 'node-
+    // externals'. The problem with using the nodeExternals is not all our projects are noed projects.
     // excludeDependenciesFromBundle({ peerDependencies: true/*, dependencies: true*/ }),
     postcss({
-      modules: true
+      modules: true // whey?
     }),
     json(),
     url(),
+    // Use babel for transpiling.
     babel({
       exclude: 'node_modules/**',
       runtimeHelpers: true,
       // '"modules": false' necessary for our React apps to work with the
-      // distributed library.
+      // distributed library. <- this might be an erroneous conclusion; test without
       // TODO: does rollup handle the modules in this case?
-      presets: rollupBabelPresets,
+      presets: babelPresets,
       plugins: babelPlugins
     }),
-    resolve({ extensions: [ '.js', '.jsx' ], preferBuiltins: true }),
-    commonjs(commonjsConfig)
+    // The default extensions include the ones we really need, as well as others that are probably useful for
+    // compatability.
+    resolve({ /*extensions: [ '.js', '.jsx', 'json' ],*/ preferBuiltins: true }), // I mean, why not? Seriously... why
+    // not prefer built-ins by default?
+    commonjs(commonjsConfig) // Do we need this? 
     // TODO: move this to ancillary docs.
     /*Attempted to create a 'yalc-push plugin', but there is just not
       'everything done' hook. The hooks are based on bundles and since we make
@@ -114,7 +122,12 @@ const rollupConfig = {
 }
 
 if (pkglib.target.isNodeish) {
-  rollupConfig.plugins.splice(0, 0, nodeExternals())
+  // This will bundle imports from 'devDependencies', but not 'deps'. You'd think this would be handled at a higher ////
+  // level... but not really. The core 'external' config lets you specify specific packages, but you can can only
+  // exclude packages by naming them. Which would be fine, but this method kills two birds with one stone... but maybe
+  // I'm missing something. The rolup docs (as of 2022-02-27) do say that "devDependencies" is ignored., which breaks
+  // everything. Right? Ugh.
+  rollupConfig.plugins.splice(0, 0, nodeExternals({ devDeps: false, deps: true }))
 }
 
 if (pkglib.target.licenseText) {

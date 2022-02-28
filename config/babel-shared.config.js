@@ -1,16 +1,22 @@
 const pkglib = require('./pkglib.js');
 
-const babelPresets = [
-  '@babel/preset-env'
-];
-const rollupBabelPresets = [
-  [ '@babel/preset-env', { 'modules': false } ]
-];
-
-if (pkglib.target.isReactish) {
-  babelPresets.push('@babel/preset-react')
-  rollupBabelPresets.push('@babel/preset-react')
+const babelPresets = []
+if (pkglib.target.isNodeish) { // then lets drop some reasonable targets
+  // At one point, we thought we had to turn modules off in order to make it concatonate rather than import all the
+  // scripts. But, that may have been a red herring. We had modules off for so long, I do wonder whether that was
+  // necossary for a specific project or something. Or maybe we were just always confused about the affect. Maybe React
+  // projects?
+  // TODO: make the node version configurable configurable; or at least a var.
+  // TODO: add support/consideraton for other engines
+  babelPresets.push([ '@babel/preset-env', { /* modules : false, */ targets : "node 14.0" } ])
+  // TODO: we should setup the output files here.
 }
+// and let multiple types be specified, then we'll create correctly packaged scripts for each.
+if (pkglib.target.isReactish) {
+  babelPresets.push('@babel/preset-env')
+  babelPresets.push('@babel/preset-react')
+}
+
 
 // NOTE: We've tried a couple times to add 'private methods'. The problem comes in that classic conventions like
 // 'this[fieldName]' fail (or at least might, never fully debugged). Dynamic field access and just general complication
@@ -23,11 +29,10 @@ const babelPlugins = [
   '@babel/plugin-proposal-optional-chaining',
   '@babel/plugin-proposal-throw-expressions',
   [ '@babel/plugin-transform-runtime',
-    { corejs: false, helpers: true, regenerator: true, useESModules: false }
+    { corejs: false, helpers: true, regenerator: true/*, useESModules: false*/ }
   ]
 ];
 
 
 exports.babelPresets = babelPresets;
-exports.rollupBabelPresets = rollupBabelPresets;
 exports.babelPlugins = babelPlugins;
