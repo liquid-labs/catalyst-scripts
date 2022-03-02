@@ -38,3 +38,7 @@
 
 ## Release 1.0.0-alpha.52
 * Initial implementation _(zane@liquid-labs.com; 2022-02-28T06:02:25.642Z)_
+
+## Release 1.0.0-alpha.53
+* _**hotfix**_: update libraries _(zane@liquid-labs.com; 2022-03-02T16:03:33.000Z)_
+* _**hotfix**_: revert to CJS output; ES incompatible with jest :( _(zane@liquid-labs.com; 2022-03-02T16:03:56.000Z)_
