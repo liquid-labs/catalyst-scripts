@@ -1,6 +1,6 @@
 // Let's rollup work with babel.
-import babel from 'rollup-plugin-babel'
-import commonjs from 'rollup-plugin-commonjs'
+import babel from '@rollup/plugin-babel'
+import commonjs from '@rollup/plugin-commonjs'
 // Add support for imported JSON files which otherwise cause silent, strange errors.
 import json from '@rollup/plugin-json'
 // Adds license information to the rolled up output file.
@@ -10,7 +10,7 @@ import license from 'rollup-plugin-license'
 import nodeExternals from 'rollup-plugin-node-externals'
 import postcss from 'rollup-plugin-postcss'
 import resolve from '@rollup/plugin-node-resolve'
-import url from 'rollup-plugin-url'
+import url from '@rollup/plugin-url'
 
 const babelConfig = require('./babel-shared.config.js')
 
@@ -84,7 +84,7 @@ const rollupConfig = {
     // Use babel for transpiling.
     babel({
       exclude: 'node_modules/**',
-      runtimeHelpers: true,
+      babelHelpers: 'runtime',
       // '"modules": false' necessary for our React apps to work with the
       // distributed library. <- this might be an erroneous conclusion; test without
       // TODO: does rollup handle the modules in this case?
@@ -95,7 +95,7 @@ const rollupConfig = {
     // compatability.
     resolve({ /*extensions: [ '.js', '.jsx', 'json' ],*/ preferBuiltins: true }), // I mean, why not? Seriously... why
     // not prefer built-ins by default?
-    commonjs(commonjsConfig) // Do we need this? 
+    commonjs(commonjsConfig) // Do we need this?
     // TODO: move this to ancillary docs.
     /*Attempted to create a 'yalc-push plugin', but there is just not
       'everything done' hook. The hooks are based on bundles and since we make
