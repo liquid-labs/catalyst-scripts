@@ -1,6 +1,6 @@
 {
   "name": "@liquid-labs/catalyst-scripts",
-  "version": "1.0.0-alpha.54",
+  "version": "1.0.0-alpha.55",
   "description": "Standard configurations and scripts useful when developing projects using Catalyst.",
   "scripts": {
     "prebuild": "mkdir -p ./dist && rm -rf ./dist/*",
