@@ -46,3 +46,6 @@
 ## Release 1.0.0-alpha.54
 * _**hotfix**_: update plugins and new config parameters _(zane@liquid-labs.com; 2022-05-09T01:26:52.000Z)_
 * _**hotfix**_: updated CHANGELOGE.md for release (by liq) _(zane@liquid-labs.com; 2022-05-09T01:27:28.000Z)_
+
+## Release 1.0.0-alpha.55
+* _**hotfix**_: support mjs, import assertions, and json imports in babel only transforms _(zane@liquid-labs.com; 2022-07-11T21:28:12.000Z)_
