@@ -27,7 +27,12 @@ if [[ -n "${JS_FILE:-}" ]]; then
   JS_BUILD_TARGET="${JS_FILE}"
   JS_LINT_TARGET="${JS_FILE}"
 elif [[ -d "${JS_SRC}" ]]; then
-  JS_BUILD_TARGET="${JS_SRC}/index.js"
+  ! [[ -f "${JS_SRC}/index.js" ]] || JS_BUILD_TARGET="${JS_SRC}/index.js"
+  ! [[ -f "${JS_SRC}/index.mjs" ]] || JS_BUILD_TARGET="${JS_SRC}/index.mjs"
+  [[ -n "${JS_BUILD_TARGET}" ]] || {
+    echo "Could not determine index file from JS_SRC: $JS_SRC" >&2
+    exit 1
+  }
   JS_LINT_TARGET="${JS_SRC}/**/*.js"
 fi
 
@@ -119,11 +124,12 @@ case "$ACTION" in
     COMMAND="${COMMAND}npx --no-install watch 'npx --no-install catalyst-scripts build' ${WATCH_DIRS};"
   ;;
   lint | lint-fix)
+   # this is never false because it's set above (I think)
     [[ -n "${JS_LINT_TARGET:-}" ]] \
       || JS_LINT_TARGET=$(jq -r '.liq.eslint.target' package.json)
     ESLINT_CONFIG="${CONFIG_PATH}/eslintrc.js"
     ESLINT=$(require-exec eslint)
-    COMMAND="${COMMAND}$ESLINT --ext .js,.jsx --config ${ESLINT_CONFIG} ${JS_LINT_TARGET}"
+    COMMAND="${COMMAND}$ESLINT --ext .js,.jsx,.mjs --config ${ESLINT_CONFIG} ${JS_LINT_TARGET}"
     if [[ "$ACTION" == 'lint-fix' ]]; then
       COMMAND="${COMMAND} --fix"
     fi

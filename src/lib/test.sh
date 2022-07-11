@@ -12,7 +12,7 @@ function catalyst_test() {
     fi
   fi
   if [[ -d test-staging ]]; then
-    if (( $(find ./test-staging -name '*.js' | wc -l) > 0 )); then
+    if (( $(find ./test-staging -name '*.js' -o -name '*.mjs' | wc -l) > 0 )); then
       JEST="$(require-exec jest '@liquid-labs/catalyst-scripts')"
       JEST_CONFIG="${CONFIG_PATH}/jest.config.js"
       # the '--runInBand' is necessary for the 'seqtests' to work.

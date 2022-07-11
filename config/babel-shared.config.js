@@ -30,7 +30,9 @@ const babelPlugins = [
   '@babel/plugin-proposal-throw-expressions',
   [ '@babel/plugin-transform-runtime',
     { corejs: false, helpers: true, regenerator: true, useESModules: false }
-  ]
+  ],
+  '@babel/plugin-syntax-import-assertions',
+  'inline-json-import'
 ];
 
 
