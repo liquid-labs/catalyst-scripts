@@ -1,6 +1,24 @@
 const pkglib = require('./pkglib.js');
 
 const eslintConfig = {
+  "overrides": [
+    {
+      "files": [
+        '**/*.mjs',
+        '**/*.js',
+      ],
+      "rules": {
+        'import/extensions': [
+          'error',
+          'never',
+          {
+            "mjs": ['error', 'always'],
+            "json": ['error', 'always'],
+          }
+        ]
+      }
+    }
+  ],
   "parser": "@babel/eslint-parser",
   "parserOptions": {
     "sourceType": "module",

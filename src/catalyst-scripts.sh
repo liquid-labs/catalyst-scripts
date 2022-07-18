@@ -33,7 +33,6 @@ elif [[ -d "${JS_SRC}" ]]; then
     echo "Could not determine index file from JS_SRC: $JS_SRC" >&2
     exit 1
   }
-  JS_LINT_TARGET="${JS_SRC}/**/*.js"
 fi
 
 _ADD_SCRIPT_WARNING=false
@@ -124,12 +123,17 @@ case "$ACTION" in
     COMMAND="${COMMAND}npx --no-install watch 'npx --no-install catalyst-scripts build' ${WATCH_DIRS};"
   ;;
   lint | lint-fix)
-   # this is never false because it's set above (I think)
+   # JS_LINT_TARGET can and often is empty.
+    # TODO: I think we can depricate the '.liq.eslint.target' option; see where it's used.
     [[ -n "${JS_LINT_TARGET:-}" ]] \
-      || JS_LINT_TARGET=$(jq -r '.liq.eslint.target' package.json)
+      || JS_LINT_TARGET=$(jq -r '.liq.eslint.target // ""' package.json)
+    [[ -n "${JS_LINT_TARGET}" ]] \
+      || JS_LINT_TARGET=.
     ESLINT_CONFIG="${CONFIG_PATH}/eslintrc.js"
     ESLINT=$(require-exec eslint)
-    COMMAND="${COMMAND}$ESLINT --ext .js,.jsx,.mjs --config ${ESLINT_CONFIG} ${JS_LINT_TARGET}"
+    # Note the '--ext' option only works with directories and 'JS_LINT_TARGET' defaults to '.'. We'd actually like to
+    # handle mor of this from 'eslintrc.js', but AFAIK, this is the only way to do this.
+    COMMAND="${COMMAND}$ESLINT --config ${ESLINT_CONFIG} --ext .js,.mjs,.xjs --ignore-pattern 'dist/**/*' ${JS_LINT_TARGET}"
     if [[ "$ACTION" == 'lint-fix' ]]; then
       COMMAND="${COMMAND} --fix"
     fi
