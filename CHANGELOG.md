@@ -49,3 +49,6 @@
 
 ## Release 1.0.0-alpha.55
 * _**hotfix**_: support mjs, import assertions, and json imports in babel only transforms _(zane@liquid-labs.com; 2022-07-11T21:28:12.000Z)_
+
+## Release 1.0.0-alpha.56
+* _**hotfix**_: support mjs and xjs files _(zane@liquid-labs.com; 2022-07-18T06:48:12.000Z)_
