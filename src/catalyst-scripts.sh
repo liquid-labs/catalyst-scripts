@@ -17,22 +17,24 @@ SCRIPTS_INSTALL="$(npm explore @liquid-labs/catalyst-scripts -- pwd)"
 CONFIG_PATH="${SCRIPTS_INSTALL}/config"
 # TODO: support 'JS_DIR' and deprecate 'JS_SRC'
 # TODO: deprecate auto-build of js directory since we prefer to use 'src' as default, but don't want to auto-build src
-if [[ -n "${JS_SRC:-}" ]] && [[ -n "${JS_FILE:-}" ]]; then
-  echoerrandexit "Cannot specify both 'JS_SRC' and 'JS_FILE'"
-fi
-# maintain (soon to be deprecated) default 'js' build
-[[ -n "${JS_FILE:-}" ]] || [[ -n "${JS_SRC:-}" ]] || JS_SRC='js'
-# now we set up the references that we need for the build and lint commands
-if [[ -n "${JS_FILE:-}" ]]; then
-  JS_BUILD_TARGET="${JS_FILE}"
-  JS_LINT_TARGET="${JS_FILE}"
-elif [[ -d "${JS_SRC}" ]]; then
-  ! [[ -f "${JS_SRC}/index.js" ]] || JS_BUILD_TARGET="${JS_SRC}/index.js"
-  ! [[ -f "${JS_SRC}/index.mjs" ]] || JS_BUILD_TARGET="${JS_SRC}/index.mjs"
-  [[ -n "${JS_BUILD_TARGET}" ]] || {
-    echo "Could not determine index file from JS_SRC: $JS_SRC" >&2
-    exit 1
-  }
+if [[ -z "${NO_BUILD:-}" ]]; then
+  if [[ -n "${JS_SRC:-}" ]] && [[ -n "${JS_FILE:-}" ]]; then
+    echoerrandexit "Cannot specify both 'JS_SRC' and 'JS_FILE'"
+  fi
+  # maintain (soon to be deprecated) default 'js' build
+  [[ -n "${JS_FILE:-}" ]] || [[ -n "${JS_SRC:-}" ]] || JS_SRC='js'
+  # now we set up the references that we need for the build and lint commands
+  if [[ -n "${JS_FILE:-}" ]]; then
+    JS_BUILD_TARGET="${JS_FILE}"
+    JS_LINT_TARGET="${JS_FILE}"
+  elif [[ -d "${JS_SRC}" ]]; then
+    ! [[ -f "${JS_SRC}/index.js" ]] || JS_BUILD_TARGET="${JS_SRC}/index.js"
+    ! [[ -f "${JS_SRC}/index.mjs" ]] || JS_BUILD_TARGET="${JS_SRC}/index.mjs"
+    [[ -n "${JS_BUILD_TARGET:-}" ]] || {
+      echo "Could not determine index file from JS_SRC: $JS_SRC" >&2
+      exit 1
+    }
+  fi
 fi
 
 _ADD_SCRIPT_WARNING=false
