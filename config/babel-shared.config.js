@@ -12,10 +12,13 @@ if (pkglib.target.isNodeish) { // then lets drop some reasonable targets
   // TODO: we should setup the output files here.
 }
 // and let multiple types be specified, then we'll create correctly packaged scripts for each.
-if (pkglib.target.isReactish) {
+else {
   babelPresets.push('@babel/preset-env')
-  babelPresets.push('@babel/preset-react')
+  if (pkglib.target.isReactish) {
+    babelPresets.push('@babel/preset-react')
+  }
 }
+
 
 
 // NOTE: We've tried a couple times to add 'private methods'. The problem comes in that classic conventions like
