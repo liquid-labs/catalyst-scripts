@@ -52,3 +52,9 @@
 
 ## Release 1.0.0-alpha.56
 * _**hotfix**_: support mjs and xjs files _(zane@liquid-labs.com; 2022-07-18T06:48:12.000Z)_
+
+## Release 1.0.0-alpha.57
+* _**hotfix**_: load presents for non-node builds _(zane@liquid-labs.com; 2022-12-26T17:43:32.000Z)_
+* _**hotfix**_: update bash-toolkit _(zane@liquid-labs.com; 2022-12-26T17:43:56.000Z)_
+* _**hotfix**_: support 'NO_BUILD' setting for test script builds _(zane@liquid-labs.com; 2022-12-26T17:44:17.000Z)_
+* _**hotfix**_: audit fixes _(zane@liquid-labs.com; 2022-12-26T17:44:45.000Z)_
