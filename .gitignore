@@ -3,3 +3,5 @@ node_modules/
 /dist/
 /yalc.lock
 /.yalc
+/last-test.txt
+/last-lint.txt

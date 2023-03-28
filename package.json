@@ -7,7 +7,7 @@
     "build": "bash-rollup ./src/catalyst-scripts.sh ./dist/catalyst-scripts.sh && chmod a+x ./dist/catalyst-scripts.sh",
     "prepare": "npm run build",
     "watch": "watch 'yalc push --no-force' ./src ./config",
-    "postyalc": "chmod a+x ~/.yalc/packages/@liquid-labs/catalyst-scripts/*/dist/catalyst-scripts.sh"
+    "postyalc": "chmod a+x ~/.yalc/packages/@liquid-labs/catalyst-scripts/*/dist/catalyst-scripts.sh",
     "qa": "echo 'stopgap' > last-test.txt"
   },
   "files": [
