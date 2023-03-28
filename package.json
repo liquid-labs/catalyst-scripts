@@ -6,10 +6,9 @@
     "prebuild": "mkdir -p ./dist && rm -rf ./dist/*",
     "build": "bash-rollup ./src/catalyst-scripts.sh ./dist/catalyst-scripts.sh && chmod a+x ./dist/catalyst-scripts.sh",
     "prepare": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "watch 'yalc push --no-force' ./src ./config",
-    "postyalc": "chmod a+x ~/.yalc/packages/@liquid-labs/catalyst-scripts/*/dist/catalyst-scripts.sh",
-    "postversion": "git push upstream v${npm_package_version}"
+    "postyalc": "chmod a+x ~/.yalc/packages/@liquid-labs/catalyst-scripts/*/dist/catalyst-scripts.sh"
+    "qa": "echo 'stopgap' > last-test.txt"
   },
   "files": [
     "config/",
@@ -64,7 +63,7 @@
   },
   "devDependencies": {
     "@liquid-labs/bash-rollup": "*",
-    "@liquid-labs/bash-toolkit": "^1.0.0-alpha.58",
+    "@liquid-labs/bash-toolkit": "^1.0.0-alpha.59",
     "watch": "^0.13.0"
   },
   "liq": {

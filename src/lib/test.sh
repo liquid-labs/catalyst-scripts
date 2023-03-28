@@ -15,7 +15,7 @@ function catalyst_test() {
     if (( $(find ./test-staging -name '*.js' -o -name '*.mjs' | wc -l) > 0 )); then
       JEST="$(require-exec jest '@liquid-labs/catalyst-scripts')"
       JEST_CONFIG="${CONFIG_PATH}/jest.config.js"
-      # the '--runInBand' is necessary for the 'seqtests' to work.
+      # the '--runInBand' is necessary for the 'seqtests' to work. // TODO: make this optional by package config
       COMMAND="${COMMAND}${JEST} --config=${JEST_CONFIG} --runInBand ./test-staging;"
     fi
     # else nothing to do; no JS files to test
