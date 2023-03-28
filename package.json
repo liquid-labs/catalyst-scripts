@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "@liquid-labs/bash-rollup": "*",
-    "@liquid-labs/bash-toolkit": "^1.0.0-alpha.60",
+    "@liquid-labs/bash-toolkit": "^1.0.0-alpha.61",
     "watch": "^0.13.0"
   },
   "liq": {
